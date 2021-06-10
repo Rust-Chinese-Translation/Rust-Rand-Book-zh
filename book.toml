@@ -1,9 +1,22 @@
 [book]
 authors = ["The Rand Project Developers"]
-multilingual = false
+multilingual = true
 src = "src"
-title = "The Rust Rand Book"
-description = "Extended documentation for Rust's Rand lib"
+title = "The Rust Rand Book（中文版）"
+description = "Rust Rand 库的拓展文档"
+language = "zh"
 
-[output.html.playgen]
+[output.html]
+git-repository-url = "https://github.com/zjp-CN/Rust-rand-book-CN"
+additional-css = ["theme/style.css"]
+additional-js = ["theme/sidebar.js"]
+
+[output.html.fold]
+enable = true
+level = 0
+
+[output.html.playground]
 editable = true
+
+[output.html.print]
+enable = false
