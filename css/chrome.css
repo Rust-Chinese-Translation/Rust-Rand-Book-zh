@@ -13,9 +13,11 @@ html {
 }
 #searchresults a,
 .content a:link,
-a:visited,
-a > .hljs {
+.content a:visited,
+.content a > .hljs {
+    /* color: var(--fg); */
     color: var(--links);
+    font-weight: normal;
 }
 
 /* Menu Bar */
@@ -93,7 +95,7 @@ a > .hljs {
 .menu-title {
     display: inline-block;
     font-weight: 200;
-    font-size: 2rem;
+    font-size: 2.4rem;
     line-height: var(--menu-bar-height);
     text-align: center;
     margin: 0;
@@ -135,8 +137,8 @@ a > .hljs {
     top: 0;
     bottom: 0;
     margin: 0;
-    max-width: 150px;
-    min-width: 90px;
+    max-width: 50px;
+    min-width: 20px;
 
     display: flex;
     justify-content: center;
@@ -195,6 +197,7 @@ a > .hljs {
 
 :not(pre):not(a) > .hljs {
     color: var(--inline-code-color);
+    /* background: #FFFBF6; */
     overflow-x: initial;
 }
 
@@ -316,7 +319,7 @@ ul#searchresults span.teaser em {
     top: 0;
     bottom: 0;
     width: var(--sidebar-width);
-    font-size: 0.875em;
+    font-size: 1em;
     box-sizing: border-box;
     -webkit-overflow-scrolling: touch;
     overscroll-behavior-y: contain;
@@ -379,7 +382,7 @@ ul#searchresults span.teaser em {
 .chapter {
     list-style: none outside none;
     padding-left: 0;
-    line-height: 2.2em;
+    line-height: 2.em;
 }
 
 .chapter ol {
@@ -449,7 +452,7 @@ ul#searchresults span.teaser em {
 .section {
     list-style: none outside none;
     padding-left: 20px;
-    line-height: 1.9em;
+    line-height: 1.5em;
 }
 
 /* Theme Menu Popup */
