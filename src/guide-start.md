@@ -1,9 +1,10 @@
-# Getting Started
+# 入门指引
 
-Below we list a short example. For more, please refer to the [API documentation]
-or the [guide].
+## 例子
 
-Lets kick things off with an example ([playground link](https://play.rust-lang.org/?version=stable&mode=debug&edition=2018&gist=7792ed032694bc558ca229be71a7783a)):
+让我们从这个例子出发吧（[playground 链接][playground link]）：
+
+[playground link]:(https://play.rust-lang.org/?version=stable&mode=debug&edition=2018&gist=7792ed032694bc558ca229be71a7783a)
 
 ```rust,editable
 # extern crate rand;
@@ -49,37 +50,37 @@ fn main() {
 }
 ```
 
-The first thing you may have noticed is that we imported everything from the
-[prelude]. This is the lazy way to `use` rand, and like the
-[standard library's prelude](https://doc.rust-lang.org/std/prelude/index.html),
-only imports the most common items. If you don't wish to use the prelude,
-remember to import the [`Rng`] trait!
+首先，你会注意到我们从 [prelude] 引入所有需要的东西。
+这是以一种偷懒的方式来 `use` Rand ，就像标准库的 [prelude][std-prelude] 一样，
+只引入最常用的条目 (items) 。
+如果你不希望引入 [prelude] ，那么请一定记得引入最重要的 [`Rng`] trait ！
 
-The Rand library automatically initialises a secure, thread-local generator
-on demand. This can be accessed via the [`thread_rng`] and [`random`] functions.
-For more on this topic, see [Random generators](guide-gen.md).
+[std-prelude]:https://doc.rust-lang.org/std/prelude/index.html
 
-While the [`random`] function can only sample values in a [`Standard`]
-(type-dependent) manner, [`thread_rng`] gives you a handle to a generator.
-All generators implement the [`Rng`] trait, which provides the [`gen`],
-[`gen_range`] and [`sample`] methods used above.
+通过使用 [`thread_rng`] 函数或者 [`random`] 函数，
+Rand 库会根据需要自动初始化一个基于本地线程的 (thread-local)
+安全的 [随机数生成器](guide-gen.md) (generator 或 random number generator 或 **RNG**) 。
 
-Rand provides functionality on iterators and slices via two more traits,
-[`IteratorRandom`] and [`SliceRandom`].
+[`random`] 函数只能以 [`Standard`] 这样依赖于类型方式来对值进行抽样，
+而 [`thread_rng`] 能让你操控生成器。
+所有的生成器都实现了 [`Rng`] trait ，
+这个 trait 提供了上面用到的 [`gen`] 、 [`gen_range`] 和 [`sample`] 方法。
 
-## Fixed seed RNGs
+Rand 通过 [`IteratorRandom`] 和 [`SliceRandom`] 两个 trait
+分别对迭代器和切片提供了随机数相关的功能。
 
-You may have noticed the use of `thread_rng()` above and wondered how to
-specify a fixed seed. To do so, you need to specify an RNG then use a method
-like [`seed_from_u64`] or [`from_seed`].
+更多例子请参考 [API 文档][API documentation] 或者本书的 [使用指南][guide] 。
 
-Note that [`seed_from_u64`] is **not suitable for cryptographic uses** since a
-single `u64` cannot provide sufficient entropy to securely seed an RNG.
-All cryptographic RNGs accept a more appropriate seed via [`from_seed`].
+## 设置生成器种子
 
-We use `ChaCha8Rng` below because it is fast and portable with good quality.
-See the [RNGs] section for more RNGs, but avoid `SmallRng` and `StdRng` if you
-care about reproducible results.
+指定种子需要指定 RNG ，然后使用 [`seed_from_u64`] 或 [`from_seed`] 方法。
+
+注意 [`seed_from_u64`] **不适合** 加密领域，
+因为单个 `u64` 无法提供足够的信息熵 (entropy) 来安全设置 RNG 种子。
+
+我们在下面使用 `ChaCha8Rng` ，是因为它很快，而且具有良好的移植性。
+到 [支持的 RNGs][RNGs] 页面进行详细阅读。
+但是如果你很关心重现结果的话，就避免使用 `SmallRng` 和 `StdRng` 。
 
 ```rust,editable
 extern crate rand;

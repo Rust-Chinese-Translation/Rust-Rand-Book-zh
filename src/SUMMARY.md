@@ -2,7 +2,7 @@
 
 [简介](intro.md)
 
-- [入门](guide-start.md)
+- [入门指引](guide-start.md)
 
 - [crates 和 features](crates.md)
     - [Rand 与协作库](crates-rand.md)
