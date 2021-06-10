@@ -1,4 +1,4 @@
-# The Rust Rand Book
+# The Rust Rand Book（中文版）
 
 [![Build Status](https://travis-ci.org/rust-random/book.svg?branch=master)](https://travis-ci.org/rust-random/rand)
 [![License](https://img.shields.io/crates/l/rand.svg)](https://github.com/rust-random/rand#license)
@@ -15,7 +15,7 @@ The book is built using [mdBook](https://rust-lang-nursery.github.io/mdBook/inde
 To preview your changes locally:
 
 ```
-cargo install mdbook --version "^0.2" --force
+cargo install mdbook
 mdbook build --open
 mdbook test
 ```
