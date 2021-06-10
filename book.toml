@@ -11,10 +11,6 @@ git-repository-url = "https://github.com/zjp-CN/Rust-rand-book-CN"
 additional-css = ["theme/style.css"]
 additional-js = ["theme/sidebar.js"]
 
-[output.html.fold]
-enable = true
-level = 0
-
 [output.html.playground]
 editable = true
 
