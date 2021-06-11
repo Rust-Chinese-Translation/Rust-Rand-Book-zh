@@ -1,4 +1,4 @@
-# Random data
+# 随机数据
 
 ```rust
 # extern crate rand;
@@ -8,82 +8,75 @@ let mut data = [0u8; 32];
 rand::thread_rng().fill_bytes(&mut data);
 ```
 
-## What is randomness?
+## 什么是随机性
 
-What does **random** mean? Colloquially the word can mean simply *unexpected*
-or *unknown*, but we need to be a bit more precise than that. Wikipedia gives us
-a more specific definition:
+<abbr title="random">随机</abbr> 意味着什么？
+通俗地说，这个词可以简单理解成 “出乎意料的” 或者 “未知的” ，
+但是我们需要对这种描述精确化。
+Wikipedia 向我们展示了一个更明确的定义：
 
 > **Randomness** is the lack of pattern or predictability in events.
+> 
+> **随机性** 就是事情发生的时候没有模式，或者不可预测。
 
-We can take this further: *lack of pattern* implies there is no *bias*; in
-other words, all possible values are equally likely.
+“没有模式”意味着没有倾向性 (no *bias*) ，也就是说，所有可能的值都等可能。
 
-To understand what a *random value* is, we still need a context: what pool of
-numbers can our random value come from?
+为了理解 <abbr title="random value">随机值</abbr> ，
+我们需要一个情景：随机值来自于一堆什么样的数字呢？
 
--   To give a simple example, consider dice: they have values 1, 2, 3, 4, 5 and
-    6, and an unbiased (fair) die will make each number equally likely, with
-    probability ⅙th.
--   Now lets take a silly example: the natural numbers (1, 2, 3, etc.). These
-    numbers have no limit. So if you were to ask for an unbiased random
-    natural number, 1, 5, 1000, 1 million, 1 trillion — all would be equally
-    likely. In fact, for *any* natural number `k`, the numbers `1, 2, ..., k`
-    are an infinitely small fraction of all the natural numbers, which means the
-    chance of picking a unbiased number from this range is effectively `1/∞ = 0`.
-    Put another way: for *any* natural number, we expect an unbiased random
-    value to be bigger. This is impossible, so there cannot be any such thing as
-    an unbiased random natural number.
--   Another example: real numbers between 0 and 1. Real numbers include all the
-    fractions, irrational numbers like π and √2, and all multiples of those...
-    there are infinitely many possibilities, even in a small range like `(0, 1)`,
-    so simply saying "all possibilities are equally likely" is not enough.
-    Instead we interpret *lack of pattern* in a different way: every interval
-    of equal size is equally likely; for example we could subdivide the interval
-    `0,1` into `0,½` and `½,1` and toss a coin to decide which interval our
-    random sample comes from. Say we pick `½,1` we can then toss another coin to
-    decide between `½,¾` and `¾,1`, restricting our random value to an interval
-    of size `¼`. We can repeat this as many times as necessary to pick a random
-    value between `0` and `1` with as much precision as we want — although we
-    should realise that we are not choosing an *exact* value but rather just a
-    small interval.
+- 举一个小例子：想想骰子，它有 1，2，3，4，5，6 总共 6 个数字，
+  无倾向性地（公平地）投掷，就会让每个值以 ⅙ 的概率等可能出现。
+- 现在思考一个无聊的例子：自然数（1，2，3，...）。
+  这些数字没有界限，如果你需要你一个等可能的无倾向性的随机自然数字，
+  比如 1，5，1000，1 百万，1 万亿，这意味着对任何自然数 `k`，
+  数字 `1, 2, ..., k` 都是所有自然数的无限小的一部分，
+  即从自然数中选一个无倾向性的值的概率等于 `1/∞ = 0` 。
+  换言之，对于任何一个自然数，我们总是觉得这个无倾向性的随机值大一些。
+  而这是不可能的，所以自然数中不会有这样的无倾向性的值。
+- 还有一个例子：0 到 1 之间的实数。
+  实数包括所有的分数、像 π 和 √2 的无理数，以及它们的倍数。
+  所以在 `(0, 1)` 这么小的范围内也有无数种可能。\
+  从而简单地说成 “所有可能的结果是等可能的” 这句话还不够。
+  我们用另外一种方式来解释 “没有模式”：
+  每个等长的区间具有等可能性。
+  比如我们能把 `0,1` 区间分成 `0,½` 和 `½,1` ，
+  然后投掷一枚硬币决定随机样本来自于哪个区间。
+  假设选择了 `½,1` ，然后投掷另一枚硬币来选择 `½,¾` 还是 `¾,1` ，
+  这把随机值限制在 `¼` 的区间大小上。
+  重复这样的做法，直到选择一个 `0` 和 `1` 之间的、达到我们想要的精度的随机值。
+  尽管我们应该意识到，我们没有选择一个“准确的”值，而是选择一个小区间。
 
-What we have defined (or failed to define) above are uniform random number
-distributions, or simply **uniform distributions**. There are also non-uniform
-distributions, as we shall see later. It's also worth noting here that a
-uniform distribution does not imply that its samples will be *evenly* spread
-(try rolling six dice: you probably won't get 1, 2, 3, 4, 5, 6).
+上面所定义（或者没能定义）的就是均匀的随机数分布，或者简单说 **均匀分布**
+(uniform distributions) 。之后我们也会看到非均匀分布。
+值得注意的是，均匀分布不意味着样本会 <abbr title="evenly">**有规律地**</abbr> 
+散布，比如你掷 6 枚骰子，你不太可能得到 1, 2, 3, 4, 5, 6 。
 
-To bring us back to computing, we can now define what a uniformly distributed
-random value (an unbiased random value) is in several contexts:
+让我们回到计算上，现在可以定义在以下几个情况下定义一个均匀分布的随机值：
 
--   `u32`: a random number between 0 and `u32::MAX` where each value is equally
-    likely
--   `BigInt`: since this type has no upper bound, we cannot produce an unbiased
-    random value (it would be infinitely large, and use infinite amounts of memory)
--   `f64`: we treat this as an approximation of the real numbers, and,
-    *by convention*, restrict to the range 0 to 1 (if not otherwise specified).
-    We will come back to the conversions used later;
-    for now note that these produce 52-53 bits of precision (depending on which
-    conversion is used, output will be in steps of `ε` or `ε/2`, where `1+ε` is
-    the smallest representable value greater than `1`).
+-   `u32`：0 到 `u32::MAX` 之间等可能的随机数
+-   `BigInt`：因为这个类型没有上界，所以无法生成一个无倾向性的随机值。
+    这个类型的值可能会无穷大，使用无穷多的内存。
+-   `f64`：将这个类型近似地看作实数，而且依照惯例，把范围限制在 0 到 1 内；
+    除非另外被指定。稍后会谈到使用的惯例有哪些。
+    现在，请注意这个类型生成 52-53 位精度的数字，
+    具体取决于使用哪种转换方式，输出结果的误差会落在 `ε` 或 `ε/2` 内，
+    其中 `1+ε` 代表比 `1` 大的最小的数字。
 
-## Random data
+## 随机数据
 
-As seen above, the term "random number" is meaningless without context. "Random
-data" typically means a sequence of random *bytes*, where for each byte, each of
-the 256 possible values are equally likely.
+正如上面讨论的， <abbr title="random number">随机数</abbr> 如果脱离情景来谈
+是没有意义的。 <abbr title="random data">随机数据</abbr> 通常指
+一列随机字节，其中每个字节上，等可能地存在一个 256 种情况的值。
 
-[`RngCore::fill_bytes`] produces exactly this: a sequence of random bytes.
+[`RngCore::fill_bytes`] 就生成了这样的一列随机字节。
 
-If a sequence of unbiased random bytes of the correct length is instead
-interpreted as an integer — say a `u32` or `u64` — the result is an unbiased
-integer. Since this conversion is trivial, [`RngCore::next_u32`] and
-[`RngCore::next_u64`] are part of the same trait. (In fact the conversion is
-often the other way around — algorithmic generators usually work with integers
-internally, which are then converted to whichever form of random data is
-required.)
+如果具有正确长度的无倾向性随机字节序列被解读成一个整数，比如 `u32` 或 `u64`，
+那么这个结果就是无倾向性的整数。
+由于这种类型转换是不重要的， [`RngCore::next_u32`] 和 [`RngCore::next_u64`]
+从某种解读看是同一张 trait 。
+实际上，这种类型转换是与之有关的另一个话题：
+算法生成器通常与整数打交道，从而可以转换为你所需要的任何类型的随机数据。
 
-[`RngCore::fill_bytes`]: ../rand/rand_core/trait.RngCore.html#tymethod.fill_bytes
-[`RngCore::next_u32`]: ../rand/rand_core/trait.RngCore.html#tymethod.next_u32
-[`RngCore::next_u64`]: ../rand/rand_core/trait.RngCore.html#tymethod.next_u64
+[`RngCore::fill_bytes`]: https://docs.rs/rand_core/*/rand_core/trait.RngCore.html#tymethod.fill_bytes
+[`RngCore::next_u32`]: https://docs.rs/rand_core/*/rand_core/trait.RngCore.html#tymethod.next_u32
+[`RngCore::next_u64`]: https://docs.rs/rand_core/*/rand_core/trait.RngCore.html#tymethod.next_u64
