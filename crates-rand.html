@@ -177,13 +177,13 @@
 <li>给 RNGs 的 trait 实现提供工具</li>
 </ul>
 <p><a href="https://rust-random.github.io/rand/rand_core/trait.RngCore.html"><code>RngCore</code></a>, <a href="https://rust-random.github.io/rand/rand_core/trait.SeedableRng.html"><code>SeedableRng</code></a>, <a href="https://rust-random.github.io/rand/rand_core/trait.CryptoRng.html"><code>CryptoRng</code></a> traits 和 <a href="https://rust-random.github.io/rand/rand_core/struct.Error.html"><code>Error</code></a> 类型
-全部在这个 crate 中被定义，然后重导出 (re-exported) 到 <a href="https://rust-random.github.io/rand/rand/index.html"><code>rand</code></a> crate 。</p>
+全部在这个 crate 中被定义，然后 <abbr title="re-exported">重导出</abbr>  到 <a href="https://rust-random.github.io/rand/rand/index.html"><code>rand</code></a> crate 。</p>
 <h2><a class="header" href="#rand-主要的用户接口" id="rand-主要的用户接口"><code>rand</code> 主要的用户接口</a></h2>
 <p><a href="https://rust-random.github.io/rand/rand/index.html"><code>rand</code></a> crate 通过优化提供常用的随机数功能。这包括以下几个方面：</p>
 <ul>
 <li><a href="https://rust-random.github.io/rand/rand/rngs/index.html"><code>rngs</code></a> 模块提供一些方便的生成器</li>
 <li><a href="https://rust-random.github.io/rand/rand/distributions/index.html"><code>distributions</code></a> 模块主要用来对随机值抽样</li>
-<li><a href="https://rust-random.github.io/rand/rand/seq/index.html"><code>seq</code></a> 模块主要用来从序列中抽样或者打乱序列 (shuffle sequences)</li>
+<li><a href="https://rust-random.github.io/rand/rand/seq/index.html"><code>seq</code></a> 模块主要用来从序列中抽样或者 <abbr title="shuffle sequences">打乱序列</abbr> </li>
 <li><a href="https://rust-random.github.io/rand/rand/trait.Rng.html"><code>Rng</code></a> trait 提供一些方便生成随机值的方法</li>
 <li><a href="https://rust-random.github.io/rand/rand/fn.random.html"><code>random</code></a> 函数 可通过单次调来生成随机数</li>
 </ul>
@@ -203,7 +203,7 @@
 对于其他的概率分布：</p>
 <ul>
 <li><a href="https://rust-random.github.io/rand/rand_distr/index.html"><code>rand_distr</code></a> crate 提供了来自一系列分布的快速抽样功能，
-包括 正态分布（高斯分布）、二项分布、泊松分布、单位圆分布 等等。</li>
+包括 <abbr title="高斯分布">正态分布</abbr>、二项分布、泊松分布、单位圆分布 等等。</li>
 <li><a href="https://github.com/boxtown/statrs"><code>statrs</code></a> crate 是 C# Math.NET 库的接口，
 不仅实现了与 <a href="https://rust-random.github.io/rand/rand_distr/index.html"><code>rand_distr</code></a> 类似的分布（有些多有些少），
 并且涵盖 PDF 和 CDF 函数，以及标准误、<em>beta</em>、<em>gamma</em> 和 <em>logistic</em> 等特殊函数，
