@@ -4,7 +4,7 @@
 
 :root {
     /* Browser default font-size is 16px, this way 1 rem = 10px */
-    font-size: 80%;
+    font-size: 70%;
 }
 
 html {
@@ -16,7 +16,7 @@ html {
 
 body {
     margin: 0;
-    font-size: 1.5rem;
+    font-size: 1.52rem;
     overflow-x: hidden;
 }
 
