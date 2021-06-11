@@ -1,43 +1,40 @@
-# Random Generators
+# 随机数生成器
 
-## Getrandom
+## `Getrandom` crate
 
-The [`getrandom`] crate provides a low-level API around platform-specific
-random-number sources, and is an important building block of `rand` and
-`rand_core` as well as a number of cryptography libraries.
-It is not intended for usage outside of low-level libraries.
+[`getrandom`] crate 依赖于平台，提供了低层次的 API 来生成随机数，
+而且是 `rand` 、 `rand_core` 和一些加密学库的重要组成部分。
+它可以不局限于用作成低层次的库。
 
-In some cases, particularly when targetting WASM, end-users may need to
-configure this crate.
-Consult the [`getrandom`] documentation for the relevant version.
+有些情况，尤其针对 WASM 领域，使用者可能需要对这个 crate 进行一些配置。
+所以请参考 [`getrandom`] 的文档。
 
-## CPU Jitter
+## CPU 扰动
 
-The [`rand_jitter`] crate implements a CPU-jitter-based entropy harvestor which
-may be used to provide an alternative source of entropy where a high-resolution
-CPU timer is available.
+[`rand_jitter`] crate 实现了 <abbr title="CPU-jitter-based">基于 CPU 扰动</abbr> 
+的信息熵，这在有高精度的 CPU 计时器的情况下，可用来作为提供熵来源的替代办法。
 
-It should be noted that CPU-jitter harvestors [may be prone to side-channel
-attacks](https://github.com/rust-random/rand/issues/699) and that this
-implementation is quite slow (due to conservative estimates of entropy gained
-per step).
+需要注意的是， CPU 抖动可能倾向于受到侧信道攻击 ([side-channel attacks]) ，
+而且由于每个步骤对所获得的熵要进行保守地估计，
+这个实现非常慢。
 
-In prior versions of `rand` this was a direct dependency, used
-automatically when other sources of entropy failed.
-In current versions it is not a dependency (not even an optional one).
+在 `rand` 早期版本，这个 crate 曾是一个直接依赖，
+当其他的熵来源都失败的时候，自动被使用。
+现在的版本，它不再是一个依赖了，甚至连可选依赖都算不上。
 
+[side-channel attacks]:https://github.com/rust-random/rand/issues/699
 
-## Deterministic generators
+## <abbr title="Deterministic generators">确定性的生成器</abbr>
 
-The following crates implement pseudo-random number generators
-(see [Our RNGs](guide-rngs.md)):
+以下 crates 实现了 <abbr title="pseudo-random">伪随机数</abbr> 生成器。
+具体请查看 [生成器类型](guide-rngs.md) 。
 
--   [`rand_chacha`] provides generators using the ChaCha cipher
--   [`rand_hc`] implements a generator using the HC-128 cipher
--   [`rand_isaac`] implements the ISAAC generators
--   [`rand_pcg`] implements a small selection of PCG generators
--   [`rand_xoshiro`] implements the SplitMix and Xoshiro generators
--   [`rand_xorshift`] implements the basic Xorshift generator
+- [`rand_chacha`] 提供了 ChaCha 加密算法的的生成器
+- [`rand_hc`] 提供了 HC-128 加密算法的的生成器
+- [`rand_isaac`] 提供了 ISAAC 生成器
+- [`rand_pcg`] 提供了一小部分的 PCG 生成器
+- [`rand_xoshiro`] 提供了 SplitMix 和 Xoshiro 生成器
+- [`rand_xorshift`] 提供了基础的 Xoshiro 生成器
 
 
 [`rand_chacha`]: https://rust-random.github.io/rand/rand_chacha/index.html

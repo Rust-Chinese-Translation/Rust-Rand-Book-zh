@@ -9,7 +9,7 @@
 - 给 RNGs 的 trait 实现提供工具
 
 [`RngCore`], [`SeedableRng`], [`CryptoRng`] traits 和 [`Error`] 类型
-全部在这个 crate 中被定义，然后重导出 (re-exported) 到 [`rand`] crate 。
+全部在这个 crate 中被定义，然后 <abbr title="re-exported">重导出</abbr>  到 [`rand`] crate 。
 
 ## `rand` 主要的用户接口
 
@@ -17,7 +17,7 @@
 
 - [`rngs`] 模块提供一些方便的生成器
 - [`distributions`] 模块主要用来对随机值抽样
-- [`seq`] 模块主要用来从序列中抽样或者打乱序列 (shuffle sequences)
+- [`seq`] 模块主要用来从序列中抽样或者 <abbr title="shuffle sequences">打乱序列</abbr> 
 - [`Rng`] trait 提供一些方便生成随机值的方法
 - [`random`] 函数 可通过单次调来生成随机数
 
@@ -39,7 +39,7 @@
 对于其他的概率分布：
 
 - [`rand_distr`] crate 提供了来自一系列分布的快速抽样功能，
-  包括 正态分布（高斯分布）、二项分布、泊松分布、单位圆分布 等等。
+  包括 <abbr title="高斯分布">正态分布</abbr>、二项分布、泊松分布、单位圆分布 等等。
 - [`statrs`] crate 是 C# Math.NET 库的接口，
   不仅实现了与 [`rand_distr`] 类似的分布（有些多有些少），
   并且涵盖 PDF 和 CDF 函数，以及标准误、*beta*、*gamma* 和 *logistic* 等特殊函数，
