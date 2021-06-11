@@ -11,6 +11,6 @@ Rand implements a few common random operations on sequences via the
 -   `partial_shuffle` a slice, effectively extracting `amount` elements in
     random order
 
-[`IteratorRandom`]: ../rand/rand/seq/trait.IteratorRandom.html
-[`SliceRandom`]: ../rand/rand/seq/trait.SliceRandom.html
-[`WeightedIndex`]: ../rand/rand/distributions/struct.WeightedIndex.html
+[`IteratorRandom`]: https://rust-random.github.io/rand/rand/seq/trait.IteratorRandom.html
+[`SliceRandom`]: https://rust-random.github.io/rand/rand/seq/trait.SliceRandom.html
+[`WeightedIndex`]: https://rust-random.github.io/rand/rand/distributions/struct.WeightedIndex.html

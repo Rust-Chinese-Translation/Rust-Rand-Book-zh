@@ -28,4 +28,4 @@
 - [三门问题](
    https://github.com/rust-random/rand/blob/master/examples/monty-hall.rs)
 
-[`prelude`]: ../rand/rand/prelude/index.html
+[`prelude`]: https://rust-random.github.io/rand/rand/prelude/index.html

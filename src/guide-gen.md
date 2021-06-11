@@ -1,10 +1,9 @@
-# Types of generators
+# 生成器的类别
 
-The previous section introduced [`RngCore`], the trait which all *random data
-sources* must implement. But what exactly is a random data source?
+[`RngCore`] trait 是所有 <abbr title="random data sources">随机数据来源</abbr>
+所必须实现的。但究竟什么是随机数据来源呢？
 
-This section concerns theory; see also the chapter on
-[random number generators](guide-rngs.md).
+这一章涉及一些理论；可以参考 [支持的 RNGs](guide-rngs.md) 一章。
 
 ```rust
 # extern crate rand;
@@ -17,112 +16,109 @@ use rand::SeedableRng;
 let mut rng = rand_pcg::Pcg32::seed_from_u64(123);
 ```
 
-## True random number generators
+## 真随机数 TRNGs
 
-A **true** random number generator (TRNG) is something which produces random
-numbers by observing some natural process, such as atomic decay or thermal noise.
-(Whether or not these things are *truly* random or are in fact deterministic —
-for example if the universe itself is a simulation — is besides the point here.
-For our purposes, it is sufficient that they are not distinguishable from true
-randomness.)
+一个真正的随机数生成器 (TRNG: **true** random number generator)
+是通过观察某些自然过程，比如原子衰退或热噪声来生成随机数。
+这些过程是真正随机的还是实际上确定的，
+比如宇宙自身可以是一个模拟系统，但都不是这里我们所关心的。
+对于我们来说，只要能与真正的随机性没有区别就足够了。
 
-Note that these processes are often biased, thus some type of *debiasing* must
-be used to yield the unbiased random data we desire.
+要注意，这些过程时常有倾向性，
+所以必须采用某种消除倾向性 (debiasing) 的类型
+来产生我们想要的无倾向性的随机数据。
 
-## Pseudo-random number generators
+## 伪随机数 PRNGs
 
-CPUs are of course supposed to compute deterministically, yet it turns out they
-can do a pretty good job of emulating random processes. Most pseudo-random
-number generators are deterministic and can be defined by just:
+CPU 当然应该确切地进行计算，然而事实证明，
+它也能很好地模拟随机过程。
+大多数伪随机数生成器 (PRNG: pseudo-random number generators) 
+是确定性的，可以被定义为：
 
--   some initial *state*
--   a function to compute a random value from the state
--   a function to advance to the next state
--   (optionally) a function to derive the initial state from a *seed* or *key*
+- 有某种初始化的状态 (state)
+- 是一个从状态中计算随机值的函数
+- 是一个进入下个状态的函数
+- （可以是）从种子或者秘钥中获得初始状态的一个函数
 
-The fact that these are deterministic can sometimes be very useful: it allows a
-simulation, randomised art work or game to be repeated exactly, producing a
-result which is a function of the seed. For more on this see the
-[portability](portability.md) chapter (note that determinicity alone isn't
-enough to guarantee reproducibility).
+这些伪随机数的确定性有时可以非常有用：
+它让一场模拟行为、随机产生的艺术作品或游戏可以准确地重复；
+产生的这种结果就是随机种子。
+你可以在 [移植性](portability.md) 这一章阅读细节。
+注意，仅仅是确定性还无法重现结果。
 
-The other big attraction of PRNGs is their speed: some of these algorithms
-require only a few CPU operations per random value, and thus can produce
-random data on demand much more quickly than most TRNGs.
+伪随机数另一个好处是速度很快：
+有些算法需要对每个随机值只进行少量的 CPU 操作，
+所以这比大多数真随机数生成器生成的速度快得多。
 
-Note however that PRNGs have several limitations:
+也要注意，PRNGs 有以下限制：
 
--   They are no stronger than their seed: if the seed is known or guessable,
-    and the algorithm is known (or guessed), then only a small number of output
-    sequences are likely.
--   Since the state size is usually fixed, only a finite number of output values
-    are possible before the generator loops and repeats itself.
--   Several algorithms are easily predictable after seeing a few values, and
-    with many other algorithms it is not clear whether they could be "cracked".
+- 它们与随机种子一样不健壮：如果种子和算法已知或可推测，
+  那么生成的序列中仅有一小部分结果是随机。
+- 由于状态的大小通常是固定的，在生成器自身循环和重复的时候，
+  仅能生成有限的随机数。
+- 有些算法通过观测少量的值就能轻易被预测，
+  而且这些算法之外，很多算法并不清楚会不会被破解。
 
-## Cryptographically secure pseudo-random number generator
+## 加密式安全的 PRNGs
 
-Cryptographically secure pseudo-random number generators (CSPRNGs) are the
-subset of PRNGs which are considered secure. That is:
+加密式安全的 PRNGs 
+(CSPRNGs: Cryptographically secure pseudo-random number generators)
+是 PRNGs 的子集，而且被认为是安全的。即
 
--   their state is sufficiently large that a brute-force approach simply trying
-    all initial values is not a feasible method of finding the initial state
-    used to produce an observed sequence of output values,
--   and there is no other algorithm which is sufficiently better than the
-    brute-force method which would make it feasible to predict the next output
-    value.
+- 它们的状态足够多，以至于只尝试所有初始值的暴力破解方法，
+  不太可能找到生成观测值的初始状态；
+- 除了暴力破解方法之外，没有其他的算法可以足够好地预测下一个输出值。
 
-Achieving secure generation requires not only a secure algorithm (CSPRNG), but
-also a secure and sufficiently large seed value (typically 256 bits), and
-protection against side-channel attacks (i.e. preventing attackers from reading
-the internal state).
+安全的生成器 (CSPRNGs) 不仅需要安全的算法，
+还需要安全且足够多的随机种子（通常是 256 位），
+以及能抵挡住侧信道攻击（即防止攻击者读取内部状态）。
 
-Some CSPRNGs additionally satisfy a third property:
+有些 CSPRNGs 还得满足第三种性质：抗回溯。
+即使攻击者发现了当前内部状态的值，他也不可能计算出 PRNG 过去的输出值。
+这暗含了，所有将来的输出值是缺乏抵抗力的。
 
--   a CSPRNG is backtracking resistant if it is impossible for an attacker to
-    calculate prior output values of the PRNG despite having discovered the
-    value of the current internal state (implying that all future output is
-    compromised).
+## 基于硬件的 HRNGs
 
-## Hardware random number generator
+基于硬件的随机数生成器 (HRNG: **hardware** random number generator)
+是理论上从某些 TRNG 到数字信息领域的延伸。
+实际上， HRNGs 可能使用一个 PRNG 来消除 TRNG 的倾向性。
+即使 HRNG 背后是 TRNG ，但 HRNG 不能保证是安全的。
+TRNG 本身可能生成不了足够的熵（即很容易预测），
+或者信号放大 (signal amplification) 和
+去过程倾向性 (debias process) 可能有缺陷。
 
-A **hardware** random number generator (HRNG) is theoretically an adaptor from
-some TRNG to digital information. In practice, these may use a PRNG to debias
-the TRNG. Even though an HRNG has some underlying TRNG, it is not guaranteed to
-be secure: the TRNG itself may produce insufficient entropy (i.e. be too
-predictable), or the signal amplification and debiasing process may be flawed.
+HRNGs 可能用来给 PRNGs 提供随机种子，
+虽然这通常不是获取安全种子的唯一方式。
+HRNGs 或许可以完全替代 PRNGs ，
+虽然这通常不是一个满意的方法，
+因为现在已经有非常快速和健壮的 PRNGs 软件，
+而且软件实现比验证硬件要容易很多。
 
-An HRNG may be used to provide the seed for a PRNG, although usually this is not
-the only way to obtain a secure seed (see the next section). An HRNG might
-replace a PRNG altogether, although since we now have very fast and very strong
-software PRNGs, and since software implementations are easier to verify than
-hardware ones, this is often not the preferred solution.
+因为 PRNGs 需要随机种子必须是安全的，
+所以 HRNGs 可以用来提供种子，或者甚至于替代 PRNGs 。
+然而我们的目标通常只是产生不可预测的随机值，
+还有一些可以替代 TRNGs 的方法。
 
-Since a PRNG needs a random seed value to be secure, an HRNG may be used to
-provide that seed, or even replace the need for a PRNG. However, since the goal
-is usually "only" to produce unpredictable random values, there are acceptable
-alternatives to *true* random number generators (see next section).
+## 信息熵 Entropy
 
-## Entropy
+正如上面提到的，一个 CSPRNG 要是安全的，其种子的值也必须是安全的。
+熵可以在以下两个方面被使用：
 
-As noted above, for a CSPRNG to be secure, its seed value must also be secure.
-The word *entropy* can be used in two ways:
+- 衡量一堆数据中未知信息的的数量
+- 当作一堆未知的数据
 
--   as a measure of the amount of unknown information in some piece of data
--   as a piece of unknown data
+理想情况下，一个随机的布尔值或者抛掷一枚硬币有 1 bit 熵 (bit of entropy) ，
+如果这个值有倾向性，熵的数量就会更少。
+香农熵 (Shannon Entropy) 就试图来衡量这种情况。
 
-Ideally, a random boolean or a coin flip has 1 bit of entropy, although if the
-value is biased, there will be less. Shannon Entropy attempts to measure this.
+比如一个 Unix 时间戳（从 1970 年以秒计算）包含了高精度和低精度的数据。
+这通常是 32-bit 数字，但是熵的大小取决于一个假想攻击者 (hypothetical attacker)
+可能以多少准确度猜出这个数字。
+如果这个攻击者以接近分钟的准确度猜中数字，熵大约有 6 bits (2^6 = 64) ；
+如果他猜中的准确度接近秒，则熵为 0 bit 。
+[`JitterRng`] 生成器使用这种概念，不使用 HRNG 来清除熵；
+它使用纳秒级精度的计时器，在对计时器的质量进行几次测试之后，
+保守地假设每个时间戳只有一些熵。 
 
-For example, a Unix time-stamp (seconds since the start of 1970) contains both
-high- and low-resolution data. This is typically a 32-bit number, but the amount
-of *entropy* will depend on how precisely a hypothetical attacker can guess the
-number. If an attacker can guess the number to the nearest minute, this may be
-approximately 6 bits (2^6 = 64); if an attacker can guess this to the second,
-this is 0 bits. [`JitterRng`] uses this concept to scavenge entropy without an
-HRNG (but using nanosecond resolution timers and conservatively assuming only a
-couple of bits entropy is available per time-stamp, after running several tests
-on the timer's quality).
-
-[`RngCore`]: ../rand/rand_core/trait.RngCore.html
-[`JitterRng`]: ../rand/rand/rngs/jitter/struct.JitterRng.html
+[`RngCore`]: https://rust-random.github.io/rand/rand_core/trait.RngCore.html
+[`JitterRng`]: https://rust-random.github.io/rand/rand/rngs/jitter/struct.JitterRng.html

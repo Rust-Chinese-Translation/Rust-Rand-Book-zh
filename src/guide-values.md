@@ -59,14 +59,14 @@ if rand::random() {
 }
 ```
 
-[`Rng`]: ../rand/rand/trait.Rng.html
-[`Rng::gen`]: ../rand/rand/trait.Rng.html#method.gen
-[`Rng::gen_range`]: ../rand/rand/trait.Rng.html#method.gen_range
-[`Rng::sample`]: ../rand/rand/trait.Rng.html#method.sample
-[`Rng::gen_bool`]: ../rand/rand/trait.Rng.html#method.gen_bool
-[`Rng::gen_ratio`]: ../rand/rand/trait.Rng.html#method.gen_ratio
-[`Rng::fill`]: ../rand/rand/trait.Rng.html#method.fill
-[`Rng::try_fill`]: ../rand/rand/trait.Rng.html#method.try_fill
-[`random`]: ../rand/rand/fn.random.htm
-[`thread_rng`]: ../rand/rand/fn.thread_rng.html
-[`Standard`]: ../rand/rand/distributions/struct.Standard.html
+[`Rng`]: https://rust-random.github.io/rand/rand/trait.Rng.html
+[`Rng::gen`]: https://rust-random.github.io/rand/rand/trait.Rng.html#method.gen
+[`Rng::gen_range`]: https://rust-random.github.io/rand/rand/trait.Rng.html#method.gen_range
+[`Rng::sample`]: https://rust-random.github.io/rand/rand/trait.Rng.html#method.sample
+[`Rng::gen_bool`]: https://rust-random.github.io/rand/rand/trait.Rng.html#method.gen_bool
+[`Rng::gen_ratio`]: https://rust-random.github.io/rand/rand/trait.Rng.html#method.gen_ratio
+[`Rng::fill`]: https://rust-random.github.io/rand/rand/trait.Rng.html#method.fill
+[`Rng::try_fill`]: https://rust-random.github.io/rand/rand/trait.Rng.html#method.try_fill
+[`random`]: https://rust-random.github.io/rand/rand/fn.random.htm
+[`thread_rng`]: https://rust-random.github.io/rand/rand/fn.thread_rng.html
+[`Standard`]: https://rust-random.github.io/rand/rand/distributions/struct.Standard.html

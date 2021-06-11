@@ -10,7 +10,7 @@
 
 - [使用指南](guide.md)
     - [随机数据](guide-data.md)
-    - [生成器类型](guide-gen.md)
+    - [生成器的分类](guide-gen.md)
     - [支持的 RNGs](guide-rngs.md)
     - [随机数种子](guide-seeding.md)
     - [生成随机值](guide-values.md)

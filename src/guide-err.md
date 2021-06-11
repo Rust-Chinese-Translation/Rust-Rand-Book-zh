@@ -31,12 +31,12 @@ be forced to fail in this case:
 -   [`ReadRng`] tries to read data from its source but fails when the stream
     ends or errors (though it retries on interrupt).
 
-[`Rng::try_fill`]: ../rand/rand/trait.Rng.html#method.try_fill
-[`RngCore::try_fill_bytes`]: ../rand/rand_core/trait.RngCore.html#tymethod.try_fill_bytes
-[`SeedableRng::from_rng`]: ../rand/rand_core/trait.SeedableRng.html#method.from_rng
-[`RngCore`]: ../rand/rand_core/trait.RngCore.html
-[`thread_rng`]: ../rand/rand/fn.thread_rng.html
-[`OsRng`]: ../rand/rand/rngs/struct.OsRng.html
-[`JitterRng`]: ../rand/rand/rngs/struct.JitterRng.html
-[`EntropyRng`]: ../rand/rand/rngs/struct.EntropyRng.html
-[`ReadRng`]: ../rand/rand/rngs/adapter/struct.ReadRng.html
+[`Rng::try_fill`]: https://rust-random.github.io/rand/rand/trait.Rng.html#method.try_fill
+[`RngCore::try_fill_bytes`]: https://rust-random.github.io/rand/rand_core/trait.RngCore.html#tymethod.try_fill_bytes
+[`SeedableRng::from_rng`]: https://rust-random.github.io/rand/rand_core/trait.SeedableRng.html#method.from_rng
+[`RngCore`]: https://rust-random.github.io/rand/rand_core/trait.RngCore.html
+[`thread_rng`]: https://rust-random.github.io/rand/rand/fn.thread_rng.html
+[`OsRng`]: https://rust-random.github.io/rand/rand/rngs/struct.OsRng.html
+[`JitterRng`]: https://rust-random.github.io/rand/rand/rngs/struct.JitterRng.html
+[`EntropyRng`]: https://rust-random.github.io/rand/rand/rngs/struct.EntropyRng.html
+[`ReadRng`]: https://rust-random.github.io/rand/rand/rngs/adapter/struct.ReadRng.html

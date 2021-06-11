@@ -85,7 +85,7 @@ Examples:
 /// [`BlockRngCore`]: rand_core::block::BlockRngCore
 
 // rand_chacha is not a dependency, but is within the same repository:
-//! [`ChaCha20Rng`]: ../../rand_chacha/struct.ChaCha20Rng.html
+//! [`ChaCha20Rng`]: ../https://rust-random.github.io/rand_chacha/struct.ChaCha20Rng.html
 
 // Link directly to docs.rs, with major & minor but no patch version:
 https://docs.rs/getrandom/0.1/getrandom/fn.getrandom.html
@@ -133,7 +133,7 @@ Note that links in the book are relative and designed to work in the
 locally, you might want to set up a symbolic link pointing to your build of the
 API documentation:
 ```sh
-ln -s ../rand/target/doc rand
+ln -s https://rust-random.github.io/rand/target/doc rand
 ```
 
 [rust-random.github.io/rand]: https://rust-random.github.io/rand

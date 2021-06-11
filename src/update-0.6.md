@@ -28,7 +28,7 @@ XSH RR 64/32 LCG aka the standard PCG algorithm).
 
 ## Sequences
 
-The [`seq` module](../rand/rand/seq/index.html) has been completely re-written,
+The [`seq` module](https://rust-random.github.io/rand/rand/seq/index.html) has been completely re-written,
 and the `choose` and `shuffle` methods have been removed from the [`Rng`] trait.
 Most functionality can now be found in the [`IteratorRandom`] and
 [`SliceRandom`] traits.
@@ -56,12 +56,12 @@ supported automatically (with recent enough Rust version). The `i128_support`
 feature flag still exists to avoid breakage, but no longer does anything.
 
 
-[`SmallRng`]: ../rand/rand/rngs/struct.SmallRng.html
-[`Pcg32`]: ../rand/rand_pcg/type.Pcg32.html
-[`Pcg64Mcg`]: ../rand/rand_pcg/type.Pcg64Mcg.html
-[`Rng`]: ../rand/trait.Rng.html
-[`IteratorRandom`]: ../rand/rand/seq/trait.IteratorRandom.html
-[`SliceRandom`]: ../rand/rand/seq/trait.SliceRandom.html
+[`SmallRng`]: https://rust-random.github.io/rand/rand/rngs/struct.SmallRng.html
+[`Pcg32`]: https://rust-random.github.io/rand/rand_pcg/type.Pcg32.html
+[`Pcg64Mcg`]: https://rust-random.github.io/rand/rand_pcg/type.Pcg64Mcg.html
+[`Rng`]: https://rust-random.github.io/rand/trait.Rng.html
+[`IteratorRandom`]: https://rust-random.github.io/rand/rand/seq/trait.IteratorRandom.html
+[`SliceRandom`]: https://rust-random.github.io/rand/rand/seq/trait.SliceRandom.html
 [`WeightedChoice`]: https://docs.rs/rand/0.5/rand/distributions/struct.WeightedChoice.html
-[`WeightedIndex`]: ../rand/rand/distributions/struct.WeightedIndex.html
-[`SliceRandom::choose_weighted`]: ../rand/rand/seq/trait.SliceRandom.html#tymethod.choose_weighted
+[`WeightedIndex`]: https://rust-random.github.io/rand/rand/distributions/struct.WeightedIndex.html
+[`SliceRandom::choose_weighted`]: https://rust-random.github.io/rand/rand/seq/trait.SliceRandom.html#tymethod.choose_weighted

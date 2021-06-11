@@ -27,7 +27,7 @@
 ## <abbr title="Deterministic generators">确定性的生成器</abbr>
 
 以下 crates 实现了 <abbr title="pseudo-random">伪随机数</abbr> 生成器。
-具体请查看 [生成器类型](guide-rngs.md) 。
+具体请查看 [生成器的分类](guide-rngs.md) 。
 
 - [`rand_chacha`] 提供了 ChaCha 加密算法的的生成器
 - [`rand_hc`] 提供了 HC-128 加密算法的的生成器
