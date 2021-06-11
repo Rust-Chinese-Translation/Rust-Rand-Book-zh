@@ -30,13 +30,14 @@ Rand 库可以通过 feature flags 进行配置。
 无标准库依赖 (no-std) 来使用大多数 Rand crates 的做法：
 禁用默认的 features `rand = { version = "0.7", default-features = false  }` 。
 这关闭了以下 flags ：
-- `std` 标准库依赖
-- `alloc` 分配器 (allocator) 功能（由 `std` 带来的，
-  如果在 `no_std` feature 下开启这个功能，则 Rand 要求 Rustc 版本至少为 1.36 ）
+- `std` feature：标准库依赖
+- `alloc` feature：分配器 (allocator) 功能\
+  （由 `std` 带来的，如果在 `no_std` feature 下开启这个功能，
+  则 Rand 要求 Rustc 版本至少为 1.36 ）
 
 有些 Rand crates 可以与以下第三方 crates 一起构建：
-- [`log`] crate 的 `log` （提供一些日志消息）
-- [`serde`] crate 的 `serde1` （提供序列化功能 serialization ）
+- 使用 `log` feature：开启 [`log`] crate 日志消息功能
+- 使用 `serde1` feature：开启 [`serde`] crate 提供的序列化 (serialization) 功能
 
 注意，加密式 RNGs **不支持** 序列化，因为这可能导致安全风险。
 如果你需要对加密式 RNGs 的状态存储功能，ChaCha 生成器支持 

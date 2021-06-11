@@ -14,7 +14,7 @@
     - [支持的 RNGs](guide-rngs.md)
     - [随机数种子](guide-seeding.md)
     - [生成随机值](guide-values.md)
-    - [随机分布](guide-dist.md)
+    - [概率分布](guide-dist.md)
     - [生成随机序列](guide-seq.md)
     - [处理 Error](guide-err.md)
 

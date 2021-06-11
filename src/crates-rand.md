@@ -1,52 +1,49 @@
-# Rand and co
+# Rand 与协作库
 
-## rand_core (API)
+## `rand_core` 提供核心 API 
 
-The [`rand_core`] crate defines the core traits implemented by RNGs. This exists
-as a separate crate with two purposes:
+[`rand_core`] crate 定义给 RNGs 实现的核心的 traits 。
+它作为单独的 crate 存在，具有两个目的：
 
--   to provide a minimal API for defining and using RNGs
--   to provide tools to aid implementation of RNGs
+- 提供定义和使用 RNGs 的最小 API 
+- 给 RNGs 的 trait 实现提供工具
 
-The [`RngCore`], [`SeedableRng`], [`CryptoRng`] traits and [`Error`] type are
-all defined by this crate and re-exported by the [`rand`] crate.
+[`RngCore`], [`SeedableRng`], [`CryptoRng`] traits 和 [`Error`] 类型
+全部在这个 crate 中被定义，然后重导出 (re-exported) 到 [`rand`] crate 。
 
-## rand (primary interface)
+## `rand` 主要的用户接口
 
-The [`rand`] crate is optimised for easy usage of common random-number
-functionality. This has several aspects:
+[`rand`] crate 通过优化提供常用的随机数功能。这包括以下几个方面：
 
--   the [`rngs`] module provides a few convenient generators
--   the [`distributions`] module concerns sampling of random values
--   the [`seq`] module concerns sampling from and shuffling sequences
--   the [`Rng`] trait provides a few convenience methods for generating
-    random values
--   the [`random`] function provides convenient generation in a single call
+- [`rngs`] 模块提供一些方便的生成器
+- [`distributions`] 模块主要用来对随机值抽样
+- [`seq`] 模块主要用来从序列中抽样或者打乱序列 (shuffle sequences)
+- [`Rng`] trait 提供一些方便生成随机值的方法
+- [`random`] 函数 可通过单次调来生成随机数
 
 ### Feature flags
 
-Besides the [common feature flags], several aspects are configurable:
+除了 [常见的 feature flags][common feature flags] ,
+以下方面也是可以配置的：
 
--   `small_rng` enables the [`SmallRng`] generator (feature-gated since v0.7)
--   `simd_support` enables experimental (nightly-only) support for generating
-    SIMD values
+- 使用 `small_rng` feature：开启 [`SmallRng`] 生成器 （Rand v0.7 之后默认关闭）
+- 使用 `simd_support` feature：开启试验性的生成 SIMD 值功能
+  （仅在 nightly Rust 中可用）\
+  注意：关于 SIMD ，这个 flag 主要用于生成 SIMD 类型，而不进行优化。
+  不管有没有开启这个 flag ，SIMD 操作都可能会在 Rand 库内部有所使用，比如
+  在 ChaCha 生成器内部就地明确支持 SIMD 操作。
 
-Note regarding SIMD: the above flag concerns explicit generation of SIMD types
-only and not optimisation. SIMD operations may be used internally regardless of
-this flag; e.g. the ChaCha generator has explicit support for SIMD operations
-internally.
+## 概率分布
 
-## Distributions
+[`rand`] crate 只实现了最常用的随机数分布：均匀分布和加权抽样。
+对于其他的概率分布：
 
-The [`rand`] crate only implements sampling from the most common random
-number distributions: uniform and weighted sampling. For everything else,
-
--   [`rand_distr`] provides fast sampling from a variety of other distributions,
-    including Normal (Gauss), Binomial, Poisson, UnitCircle, and many more
--   [`statrs`] is a port of the C# Math.NET library, implementing many of the
-    same distributions (plus/minus a few), along with PDF and CDF functions,
-    the *error*, *beta*, *gamma* and *logistic* special functions, plus a few
-    utilities. (For clarity, [`statrs`] is not part of the Rand library.)
+- [`rand_distr`] crate 提供了来自一系列分布的快速抽样功能，
+  包括 正态分布（高斯分布）、二项分布、泊松分布、单位圆分布 等等。
+- [`statrs`] crate 是 C# Math.NET 库的接口，
+  不仅实现了与 [`rand_distr`] 类似的分布（有些多有些少），
+  并且涵盖 PDF 和 CDF 函数，以及标准误、*beta*、*gamma* 和 *logistic* 等特殊函数，
+  以及一些实用的东西。（ [`statrs`] 并不属于 Rand 库）
 
 [common feature flags]: crates.md#feature-flags
 
