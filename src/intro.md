@@ -8,15 +8,17 @@
 1.  对 [crates 和 featurs](crates.md) 的总览
 3.  [使用指南](guide.md)
 4.  介绍 [移植性和可重复性](portability.md)
-    （如果你想在不同平台重现结果的话，就阅读这章）
+    （如果你想在不同机器/平台上重现结果的话，请阅读这章）
 5.  [版本更新说明](update.md)
 6.  [贡献说明](contributing.md)
 
 除了这本书，你可能还想查看以下链接：
 
--   [Rand 库最新发行版的 API 文档](https://docs.rs/rand/)
--   [repo master 分支的 API 文档](https://rust-random.github.io/rand/)
--   [Rand repo](https://github.com/rust-random/rand/)
+-   [Rand 库最新发行版的 API 文档](https://docs.rs/rand/) 
+    （ doc.rs 地址 仅有 `rand` 库的文档，如果查相关库文档，需要访问单独的文档页面）
+-   [repo master 分支的 API 文档](https://rust-random.github.io/rand/) 
+    （repo 的文档地址具有 `rand` 所涉及的所有相关库的文档，一起查找更方便）
+-   [Rand 库 repo](https://github.com/rust-random/rand/)
 -   [本书 repo](https://github.com/rust-random/book/)
 
 [Rand]: https://docs.rs/rand
