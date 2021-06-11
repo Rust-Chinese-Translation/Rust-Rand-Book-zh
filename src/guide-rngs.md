@@ -1,12 +1,11 @@
-# Our RNGs
+# 支持的 RNGs
 
-There are many kinds of RNGs, with different trade-offs. Rand provides some
-convenient generators in the [`rngs` module]. Often you can just use
-[`thread_rng`], a function which automatically initializes an RNG in
-thread-local memory and returns a reference to it. It is fast, good quality,
-and (to the best of our knowledge) cryptographically secure.
+有很多种 RNGs ，它们具有各自的优缺点。
+Rand 库在 [`rngs`] 模块 里提供了一些方便的生成器。
+通常你可以使用 [`thread_rng`] 函数，它会在本地线程内存中自动初始化一个 RNG ，
+然后返回它的引用；它很快，质量不错，而且（据我们所知）是加密级安全的。
 
-Contents of this documentation:
+这页文档的目录：
 
 1. [The generators](#the-generators)
 1. [Performance and size](#performance)
@@ -15,86 +14,84 @@ Contents of this documentation:
 1. [Extra features](#extra-features)
 1. [Further reading](#further-reading)
 
+# 介绍生成器
 
-# The generators
+## 基础的 PRNGs
 
-## Basic pseudo-random number generators (PRNGs)
+“标准的”非加密级别的 PRNGs 
+的目标常常是在易用、质量、内存占用和性能之间找到良好的平衡点。
+非加密级别的生成器时间上先于加密级别的生成器，
+在某些方面已被加密级的淘汰，但是非加密级别的生成器有以下一些优势：
+更小的状态，快速初始化、使用简单、在嵌入式 CPUs 上更小的内存占用。
+然而不是所有非加密级的 PRNGs 提供这些优点，
+比如 Mersenne Twister 算法虽容易预测，但有很大的状态。
 
-The goal of "standard" non-cryptographic PRNGs is usually to find a good
-balance between simplicity, quality, memory usage and performance.
-Non-cryptographic generators pre-date cryptographic ones and are in some ways
-obsoleted by them, however non-cryptographic generators do have some advantages:
-a small state size, fast initialisation, simplicity, lower energy usage for
-embedded CPUs. (However, not all non-crypto PRNGs provide these benefits,
-e.g. the Mersenne Twister has a very large state despite being easy to predict).
+这些算法对于 Monte Carlo 模拟是很重要的，
+而且也适合像随机化算法、随机化游戏这样场景，没有预测问题。
+注意，赌博游戏可能具有预测方面问题，从而推荐加密级的 PRNGs 。
 
-These algorithms are very important to Monte Carlo simulations, and also
-suitable for several other problems such as randomized algorithms and games,
-where predictability is not an issue. (Note however that for gambling games
-predictability may be an issue and a cryptographic PRNG is recommended.)
+Rand 库提供的非加密级 PRNGs 可以用下面的表格总结。
+你可能需要参考 [pcg-random] 和 [xoshiro] 。
 
-The Rand project provides several non-cryptographic PRNGs. A sub-set of these
-are summarised below.
-You may wish to refer to the [pcg-random] and [xoshiro] websites.
+| 名称                   | 全名                   | 性能    | 内存     | 质量  | 范围                        | 特点       |
+| --                     | --                     | --      | --       | --    | --                          | --         |
+| [`SmallRng`]           | 无                     | 7 GB/s  | 16 bytes | ★★★☆☆ | ≥ `u32` * 2<sup>64</sup>    | 无移植性   |
+| [`Pcg32`]              | PCG XSH RR 64/32 (LCG) | 3 GB/s  | 16 bytes | ★★★☆☆ | `u32` * 2<sup>64</sup>      | —          |
+| [`Pcg64`]              | PCG XSL 128/64 (LCG)   | 4 GB/s  | 32 bytes | ★★★☆☆ | `u64` * 2<sup>128</sup>     | —          |
+| [`Pcg64Mcg`]           | PCG XSL 128/64 (MCG)   | 7 GB/s  | 16 bytes | ★★★☆☆ | `u64` * 2<sup>126</sup>     | —          |
+| [`XorShiftRng`]        | Xorshift 32/128        | 5 GB/s  | 16 bytes | ★☆☆☆☆ | `u32` * 2<sup>128</sup> - 1 | —          |
+| [`Xoshiro256PlusPlus`] | Xoshiro256++           | 7 GB/s  | 32 bytes | ★★★☆☆ | `u64` * 2<sup>256</sup> - 1 | jump-ahead |
+| [`Xoshiro256Plus`]     | Xoshiro256+            | 8 GB/s  | 32 bytes | ★★☆☆☆ | `u64` * 2<sup>256</sup> - 1 | jump-ahead |
+| [`SplitMix64`]         | splitmix64             | 8 GB/s  | 8 bytes  | ★☆☆☆☆ | `u64` * 2<sup>64</sup>      | —          |
+| [`StepRng`]            | counter                | 51 GB/s | 16 bytes | ☆☆☆☆☆ | `u64` * 2<sup>64</sup>      | —          |
 
-| name | full name | performance | memory | quality | period | features |
-|------|-----------|-------------|--------|---------|--------|----------|
-| [`SmallRng`] | (unspecified) | 7 GB/s | 16 bytes | ★★★☆☆ | ≥ `u32` * 2<sup>64</sup> | not portable |
-| [`Pcg32`] | PCG XSH RR 64/32 (LCG) | 3 GB/s | 16 bytes | ★★★☆☆ | `u32` * 2<sup>64</sup> | — |
-| [`Pcg64`] | PCG XSL 128/64 (LCG) | 4 GB/s | 32 bytes | ★★★☆☆ | `u64` * 2<sup>128</sup> | — |
-| [`Pcg64Mcg`] | PCG XSL 128/64 (MCG) | 7 GB/s | 16 bytes | ★★★☆☆ | `u64` * 2<sup>126</sup> | — |
-| [`XorShiftRng`] | Xorshift 32/128 | 5 GB/s | 16 bytes | ★☆☆☆☆ | `u32` * 2<sup>128</sup> - 1 | — |
-| [`Xoshiro256PlusPlus`] | Xoshiro256++ | 7 GB/s | 32 bytes | ★★★☆☆ | `u64` * 2<sup>256</sup> - 1 | jump-ahead |
-| [`Xoshiro256Plus`] | Xoshiro256+ | 8 GB/s | 32 bytes | ★★☆☆☆ | `u64` * 2<sup>256</sup> - 1 | jump-ahead |
-| [`SplitMix64`] | splitmix64 | 8 GB/s | 8 bytes | ★☆☆☆☆ | `u64` * 2<sup>64</sup> | — |
-| [`StepRng`] | counter | 51 GB/s | 16 bytes | ☆☆☆☆☆ | `u64` * 2<sup>64</sup> | — |
+这里性能的衡量方式是在 3.4GHz Haswell CPU 上粗略地进行 `u64` 类型的输出；
+注意性能在不同的应用场景下会明显不同；
+一般来说，加密级的 RNGs 会更好地处理字节序列输出。
 
-Here, performance is measured roughly for `u64` outputs on a 3.4GHz Haswell CPU
-(note that this will vary significantly by application; in general cryptographic
-RNGs do better with byte sequence output). Quality ratings are
-based on theory and observable defects, roughly as follows:
+质量评级是基于理论支持和可观测到的缺陷两个角度，粗略地分成：
 
--   ★☆☆☆☆ = suitable for simple applications but with significant flaws
--   ★★☆☆☆ = good performance in most tests, some issues
--   ★★★☆☆ = good performance and theory, no major issues
--   ★★★★★ = cryptographic quality
+-   ★☆☆☆☆ = 适合简单的应用场景，但是有具有的缺陷
+-   ★★☆☆☆ = 在大多数测试中性能较好，有一些问题
+-   ★★★☆☆ = 性能和理论支持都很好，没什么大问题
+-   ★★★★★ = 加密级的质量
 
-## Cryptographically secure pseudo-random number generators (CSPRNGs)
+## 加密级安全的 RNGs (CSPRNGs)
 
-CSPRNGs have much higher requirements than basic PRNGs. The primary
-consideration is security. Performance and simplicity are also important,
-but in general CSPRNGs are more complex and slower than regular PRNGs.
-Quality is no longer a concern, as it is a requirement for a
-CSPRNG that the output is basically indistinguishable from true randomness
-since any bias or correlation makes the output more predictable.
+CSPRNGs 比基础的 PRNGs 有更高的要求。主要是对安全的考虑。
+性能和易用也很重要，但是 CSPRNGs 一般更复杂一些，比常规的 PRNGs 更慢。
+质量不再是关心的重点，因为 CSPRNGs 生成的随机数基本上与真的随机值别无二致，
+这正是它所要求的。毕竟任何的倾向性或相关性都会让输出结果更容易被预测。
 
-There is a close relationship between CSPRNGs and cryptographic ciphers.
-Any block cipher can be turned into a CSPRNG by encrypting a counter. Stream
-ciphers are basically a CSPRNG and a combining operation, usually XOR. This
-means that we can easily use any stream cipher as a CSPRNG.
+CSPRNGs 和加密密码 (cryptographic ciphers) 具有密切的联系。
+任何块密码 (block cipher) 都能转化为对一个计数器 (counter) 加密的 CSPRNG 。
+流密码 (stream cipher) 基本上就是一个 CSPRNG 和一组操作（通常是 XOR）。
+这意味着，我们能很容易地把任何流密码用作一个 CSPRNG 。
 
-This library provides the following CSPRNGs. We can make no guarantees
-of any security claims. This table omits the "quality" column from the previous
-table since CSPRNGs may not have observable defects.
+Rand 库提供了以下 CSPRNGs 。可以不再要求任何安全性（因为它们已经是安全的）。
+这张表去掉了 “质量” 一列，因为 CSPRNGs 可能不会有可观测到的缺陷。
 
-| name | full name |  performance | initialization | memory | security (predictability) | forward secrecy |
-|------|-----------|--------------|--------------|----------|----------------|-------------------------|
-| [`StdRng`] | (unspecified) | 1.5 GB/s | fast | 136 bytes | widely trusted | no |
-| [`ChaCha20Rng`] | ChaCha20 | 1.8 GB/s | fast | 136 bytes | [rigorously analysed](https://tools.ietf.org/html/rfc7539#section-1) | no |
-| [`ChaCha8Rng`] | ChaCha8 | 2.2 GB/s | fast | 136 bytes | small security margin | no |
-| [`Hc128Rng`] | HC-128 | 2.1 GB/s | slow | 4176 bytes | [recommended by eSTREAM](http://www.ecrypt.eu.org/stream/) | no |
-| [`IsaacRng`] | ISAAC | 1.1 GB/s | slow | 2072 bytes | [unknown](https://burtleburtle.net/bob/rand/isaacafa.html) | unknown |
-| [`Isaac64Rng`] | ISAAC-64 | 2.2 GB/s | slow | 4136 bytes| unknown | unknown |
+| 名称            | 全名     | 性能     | 初始化 | 内存       | 安全性（可预测性） | 前向保密性 |
+| --              | --       | --       | --     | --         | --                 | --         |
+| [`StdRng`]      | 无       | 1.5 GB/s | 快     | 136 bytes  | 被广泛信赖         | 无         |
+| [`ChaCha20Rng`] | ChaCha20 | 1.8 GB/s | 快     | 136 bytes  | [有严格的分析]     | 无         |
+| [`ChaCha8Rng`]  | ChaCha8  | 2.2 GB/s | 快     | 136 bytes  | 安全性很小         | 无         |
+| [`Hc128Rng`]    | HC-128   | 2.1 GB/s | 慢     | 4176 bytes | [被 eSTREAM 推荐]  | 无         |
+| [`IsaacRng`]    | ISAAC    | 1.1 GB/s | 慢     | 2072 bytes | [未知]             | 未知       |
+| [`Isaac64Rng`]  | ISAAC-64 | 2.2 GB/s | 慢     | 4136 bytes | 未知               | 未知       |
 
-It should be noted that the ISAAC generators are only included for
-historical reasons: they have been with the Rust language since the very
-beginning. They have good quality output and no attacks are known, but have
-received little attention from cryptography experts.
+[有严格的分析]: https://tools.ietf.org/html/rfc7539#section-1
+[被 eSTREAM 推荐]: http://www.ecrypt.eu.org/stream/
+[未知]: https://burtleburtle.net/bob/rand/isaacafa.html
 
+应该十分注意，ISAAC 生成器仅出于历史原因使用：
+它们从一开始就和 Rust 语言一起被使用，
+它们可以良好地生成随机数，也没有被攻击成功过，
+但是并未得到加密学专家的关注。
 
-# Notes on generators
+# 评价生成器
 
-## Performance
+## 性能
 
 First it has to be said most PRNGs are very fast, and will rarely be a
 performance bottleneck.
@@ -291,7 +288,7 @@ https://web.archive.org/web/20160801142711/http://random.mat.sbg.ac.at/results/p
 by P. Hellekalek.
 
 
-[`rngs` module]: https://rust-random.github.io/rand/rand/rngs/index.html
+[`rngs`]: https://rust-random.github.io/rand/rand/rngs/index.html
 [`SmallRng`]: https://rust-random.github.io/rand/rand/rngs/struct.SmallRng.html
 [`StdRng`]: https://rust-random.github.io/rand/rand/rngs/struct.StdRng.html
 [`StepRng`]: https://rust-random.github.io/rand/rand/rngs/mock/struct.StepRng.html

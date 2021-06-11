@@ -59,9 +59,9 @@ CPU 当然应该确切地进行计算，然而事实证明，
 - 有些算法通过观测少量的值就能轻易被预测，
   而且这些算法之外，很多算法并不清楚会不会被破解。
 
-## 加密式安全的 PRNGs
+## 加密级安全的 PRNGs
 
-加密式安全的 PRNGs 
+加密级安全的 PRNGs 
 (CSPRNGs: Cryptographically secure pseudo-random number generators)
 是 PRNGs 的子集，而且被认为是安全的。即
 
