@@ -1,35 +1,31 @@
-# Guide
+# 使用指南
 
-This section attempts to explain some of the concepts used in this library.
+这一章目的是解释 Rand 库的一些概念。
 
-1.  [What is random data and what is randomness anyway?](guide-data.md)
-1.  [What kind of random generators are there?](guide-gen.md)
-1.  [What random number generators does Rand provide?](guide-rngs.md)
-1.  [Turning random data into useful values](guide-values.md)
-1.  [Distributions: more control over random values](guide-dist.md)
-1.  [Sequences](guide-seq.md)
-1.  [Error handling](guide-err.md)
+1.  [什么是随机数据和随机性？](guide-data.md)
+1.  [有哪些类型的随机数生成器](guide-gen.md)
+1.  [Rand 提供哪些随机数生成器](guide-rngs.md)
+1.  [如何把随机数据变成有用的随机值](guide-values.md)
+1.  [概率分布：更方便掌控随机值](guide-dist.md)
+1.  [序列](guide-seq.md)
+1.  [处理 Error](guide-err.md)
 
-## Importing items (prelude)
+## 导入条目
 
-The most convenient way to import items from Rand is to use the [`prelude`].
-This includes the most important parts of Rand, but only those unlikely to
-cause name conflicts.
+导入 Rand 里的条目，最方便的做法是使用 [`prelude`] 。
+它包括 Rand 库最重要的部分，只包含 [`prelude`] 的话不太会造成同名冲突。
 
-Note that Rand 0.5 has significantly changed the module organization and
-contents relative to previous versions. Where possible old names have been
-kept (but are hidden in the documentation), however these will be removed
-in the future. We therefore recommend migrating to use the prelude or the
-new module organization in your imports.
+注意 Rand 0.5 相较于之前的版本，在模块结构和内容上进行了很大的调整。
+可能有些旧名字依然被保留，但它们已不出现在文档介绍里，将来这些名字会被移除掉。
+因此建议你导入时使用 prelude 或者最新的模块结构。
 
+## 更多例子
 
-## Further examples
+以下案例应用可以给你一些启发：
 
-For some inspiration, see the example applications:
-
-- [Monte Carlo estimation of π](
+- [对 π 的 Monte Carlo 估计](
   https://github.com/rust-random/rand/blob/master/examples/monte-carlo.rs)
-- [Monty Hall Problem](
+- [三门问题](
    https://github.com/rust-random/rand/blob/master/examples/monty-hall.rs)
 
 [`prelude`]: ../rand/rand/prelude/index.html
