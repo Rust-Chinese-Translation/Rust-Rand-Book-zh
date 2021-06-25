@@ -5,15 +5,6 @@ Rand 库在 [`rngs`] 模块 里提供了一些方便的生成器。
 通常你可以使用 [`thread_rng`] 函数，它会在本地线程内存中自动初始化一个 RNG ，
 然后返回它的引用；它很快，质量不错，而且（据我们所知）是加密级安全的。
 
-这页文档的目录：
-
-1. [The generators](#the-generators)
-1. [Performance and size](#performance)
-1. [Quality and cycle length](#quality)
-1. [Security](#security)
-1. [Extra features](#extra-features)
-1. [Further reading](#further-reading)
-
 # 介绍生成器
 
 ## 基础的 PRNGs
@@ -75,7 +66,7 @@ Rand 库提供了以下 CSPRNGs 。可以不再要求任何安全性（因为它
 | --              | --       | --       | --     | --         | --                 | --         |
 | [`StdRng`]      | 无       | 1.5 GB/s | 快     | 136 bytes  | 被广泛信赖         | 无         |
 | [`ChaCha20Rng`] | ChaCha20 | 1.8 GB/s | 快     | 136 bytes  | [有严格的分析]     | 无         |
-| [`ChaCha8Rng`]  | ChaCha8  | 2.2 GB/s | 快     | 136 bytes  | 安全性很小         | 无         |
+| [`ChaCha8Rng`]  | ChaCha8  | 2.2 GB/s | 快     | 136 bytes  | 安全的边界很小     | 无         |
 | [`Hc128Rng`]    | HC-128   | 2.1 GB/s | 慢     | 4176 bytes | [被 eSTREAM 推荐]  | 无         |
 | [`IsaacRng`]    | ISAAC    | 1.1 GB/s | 慢     | 2072 bytes | [未知]             | 未知       |
 | [`Isaac64Rng`]  | ISAAC-64 | 2.2 GB/s | 慢     | 4136 bytes | 未知               | 未知       |
@@ -93,200 +84,166 @@ Rand 库提供了以下 CSPRNGs 。可以不再要求任何安全性（因为它
 
 ## 性能
 
-First it has to be said most PRNGs are very fast, and will rarely be a
-performance bottleneck.
+首先，不得不说 Rand 的大多数 PRNGs 非常快，几乎不会出现性能瓶颈。
 
-Performance of basic PRNGs is a bit of a subtle thing. It depends a lot on
-the CPU architecture (32 vs. 64 bits), inlining, and also on the number of
-available registers. This often causes the performance to be affected by
-surrounding code due to inlining and other usage of registers.
+基础 PRNGs 的性能有些微妙的地方。
+它们的性能大多取决于 CPU 架构（32 或 64 位）、内联能力 (inlining) 和 寄存器 (register) 的数量。
+性能常常因为内联和其他寄存器的使用情况，而受到上下文代码的影响。
 
-When choosing a PRNG for performance it is important to benchmark your own
-application due to interactions between PRNGs and surrounding code and
-dependence on the CPU architecture as well as the impact of the size of
-data requested. Because of all this, we do not include performance numbers
-here but merely a qualitative rating.
+出于性能考虑来选择一个 PRNG 的时候，对你的应用进行基准测试 (benchmark) 是很重要的，
+因为 PRNGs 和上下文代码的交互、 CPU 架构以及所需数据的大小都会影响性能。
+正因为如此，这里不会用数字来量化性能，而仅仅只是以定性评级的方式来衡量性能。
 
-CSPRNGs are a little different in that they typically generate a block of
-output in a cache, and pull outputs from the cache. This allows them to have
-good amortised performance, and reduces or completely removes the influence
-of surrounding code on the CSPRNG performance.
+CSPRNGs 略微特别，因为它们通常在缓存里生成一块输出，然后从缓存中提取输出。
+这种方式让 CSPRNGs 很好地摊销掉性能，从而减少或者完全消除了上下文代码对 CSPRNGs 的性能影响。
 
-### Worst-case performance
-Simple PRNGs typically produce each random value on demand. In contrast, CSPRNGs
-usually produce a whole block at once, then read from this cache until it is
-exhausted, giving them much less consistent performance when drawing small
-quantities of random data.
+### 最坏情况下
 
-### Memory usage
+简单的 PRNGs 一般按需生成单个随机值。
+而 CSPRNGs 通常一次生成一整块随机值，然后在这块值消耗完之前，从缓存中读取这些值。
+这使得在生成少量随机数据的时候， CSPRNGs 与 PRNGs 的性能差异较大。
 
-Simple PRNGs often use very little memory, commonly only a few words, where
-a *word* is usually either `u32` or `u64`. This is not true for all
-non-cryptographic PRNGs however, for example the historically popular
-Mersenne Twister MT19937 algorithm requires 2.5 kB of state.
+### 内存使用
 
-CSPRNGs typically require more memory; since the seed size is recommended
-to be at least 192 bits and some more may be required for the algorithm,
-256 bits would be approximately the minimum secure size. In practice,
-CSPRNGs tend to use quite a bit more, [`ChaChaRng`] is relatively small with
-136 bytes of state.
+简单的 PRNGs 一般使用很少的内存，只需要几个字 (words) ，而一个字一般要么是 `u32` 要么是 `u64` 。
+然而，也不是说所有非加密级别的 PRNGs 均如此。
+比如历史上一度流行的 Mersenne Twister MT19937 算法就需要 2.5 kB (20480 bits) 大小的状态。
 
-### Initialization time
+CSPRNGs 一般需要更多的内存，因为随机种子的大小建议至少为 192 bits ，
+有些算法需要更多 bit 的种子，而 256 bits 是基本满足安全性的种子大小。
+实际应用中， CSPRNGs 倾向于使用更多 bits 的种子，
+[`ChaChaRng`] 使用 136 bytes (1088 bits) 大小的状态。
 
-The time required to initialize new generators varies significantly. Many
-simple PRNGs and even some cryptographic ones (including [`ChaChaRng`])
-only need to copy the seed value and some constants into their state, and
-thus can be constructed very quickly. In contrast, CSPRNGs with large state
-require an expensive key-expansion.
+### 初始化时间
 
-## Quality
+初始化新生成器的时间差异很明显。
+很多简单的 PRNGs 、甚至某些加密级 PRNGs （包括 [`ChaChaRng`] ）都只需要
+把种子的值和一些常量复制进状态里面，因此它们能很快地构造一个生成器。
+而具有很大状态的 CSPRNGs 正相反，需要长时间的键展开 (key-expansion) 。
 
-Many basic PRNGs are not much more than a couple of bitwise and arithmetic
-operations. Their simplicity gives good performance, but also means there
-are small regularities hidden in the generated random number stream.
+## 随机数的质量
 
-How much do those hidden regularities matter? That is hard to say, and
-depends on how the RNG gets used. If there happen to be correlations between
-the random numbers and the algorithm they are used in, the results can be
-wrong or misleading.
+许多基础的 PRNGs 只不过是一些位运算和算术运算。
+它们的简单性提供了良好的性能，但也意味着在生成的随机数流中隐藏了一些小的规则。
 
-A random number generator can be considered good if it gives the correct
-results in as many applications as possible. The quality of PRNG
-algorithms can be evaluated to some extent analytically, to determine the
-cycle length and to rule out some correlations. Then there are empirical
-test suites designed to test how well a PRNG performs on a wide range of
-possible uses, the latest and most complete of which are [TestU01] and
-[PractRand].
+这些隐藏的规则会造成多大影响呢？
+很难讲。那取决于你如何 RNGs 。
+随机数和这个随机数所使用的算法碰巧具有相关性的话，
+RNGs 的结果可能就不正确，或者是误导的。
 
-CSPRNGs tend to be more complex, and have an explicit requirement to be
-unpredictable. This implies there must be no obvious correlations between
-output values.
+当某个 RNG 在许多应用尽可能给出正确的结果时，就被认为是一个好的 RNG 。
+PRNG 算法的质量可以在一定程度上用解析 (analytically) 的方法来评估，
+以确定周期长度并排除某些相关性。
+也有一些基于经验的测试套件，用以测试 RNGs 在各种使用环境中的表现，
+其中最新、最完整的是 [TestU01] 和 [PractRand] 。
 
-### Quality stars:
-PRNGs with 3 stars or more should be good enough for most non-crypto
-applications. 1 or 2 stars may be good enough for typical apps and games, but do
-not work well with all algorithms.
+CSPRNGs 往往复杂很多，它们明确要求随机值不可预测。
+这表明输出值必须完全不相关。
 
-### Period
+### 质量得分
 
-The *period* or *cycle length* of a PRNG is the number of values that can be
-generated after which it starts repeating the same random number stream.
-Many PRNGs have a fixed-size period, while for others ("chaotic RNGs") the
-cycle length may depend on the seed and short cycles may exist.
+对于大多数非加密级应用的 PRNGs 可以评 3 星或更多。
 
-Note that a long period does not imply high quality (e.g. a counter through
-`u128` values provides a decently long period). Conversely, a short period may
-be a problem, especially when multiple RNGs are used simultaneously.
-In general, we recommend a period of at least 2<sup>128</sup>.
-(Alternatively, a PRNG with shorter period of at least 2<sup>64</sup> and
-support for multiple streams may be sufficient. Note however that in the case
-of PCG, its streams are closely correlated.)
+对于一般的应用和游戏，不能与所有算法一起良好工作的 PRNGs 可以评 1 星或 2 星。
 
-*Avoid reusing values!*
-On today's hardware, a fast RNG with a cycle length of *only*
-2<sup>64</sup> can be used sequentially for centuries before cycling. However,
-when multiple RNGs are used in parallel (each with a unique seed), there is a
-significant chance of overlap between the sequences generated.
-For a generator with a *large* period `P`, `n` independent generators, and
-a sequence of length `L` generated by each generator, the chance of any overlap
-between sequences can be approximated by `Ln² / P` when `nL / P` is close to
-zero. For more on this topic, please see these
-[remarks by the Xoshiro authors](http://prng.di.unimi.it/#remarks).
+### 周期长度
 
-*Collisions and the birthday paradox!*
-For a generator with outputs of equal size to its state, it is recommended not
-to use more than `√P` outputs. A generalisation for `kw`-bit state and `w`-bit
-generators is to ensure `kL² < P`. This requirement stems from the
-*generalised birthday problem*, asking how many unbiased samples from a set of
-size `d = 2^w` can be taken before the probability of a repeat is at least half.
-Note that for `kL² > P` a generator with `kw`-dimensional equidistribution
-*cannot* generate the expected number of repeated samples, however generators
-without this property are *also* not guaranteed to generate the expected number
-of repeats.
+一个 PRNG 的周期 (period) 或周期长度 (cycle length) 指：
+在这个 PRNG 开始重复同一个随机数流之后，可被生成的随机值的数量。
+许多 PRNGs 具有固定大小的周期，而诸如 chaotic RNGs 的周期长度可能取决于随机种子，
+而且其周期可能很短。
 
-## Security
+要注意，长周期不意味着高质量，比如一个 `u128` 值的计数就提供了一个合适长度的周期。
+但与之相反的是，短周期可能就会有带来问题，尤其在多个 RNGs 同时被使用的时候。
+一般而言，建议一个周期至少有 2<sup>128</sup> 那么长。
+或者说，一个短周期的 PRNG 应至少有 2<sup>64</sup> 的长度，而且支持多个流 (streams) 。
+在 PCG 中，要注意它的流是密切相关的。
 
-### Predictability
+**避免重复使用值！**
+在现代硬件上，一个仅有 2<sup>64</sup> 周期长度的 RNG 可在循环（重复）之前快速生成很长一列随机数。
+而当多个 RNGs 并行以各自单独的种子被使用的时候，生成的序列很有可能重复 (overlap) 。
+假设一个巨大周期 `P` 的 RNG，以及 `n` 个 RNGs ，这 n 个 RNGs 里每个都具有周期 `L` ，
+那么当 `nL / P` 接近于 0 时，它们所产生的序列出现重复的的概率接近 `Ln² / P` 。
+对这个问题的深入探讨，请参考：
+[Xoshiro 作者们的讨论](http://prng.di.unimi.it/#remarks) 。
 
-From the context of any PRNG, one can ask the question *given some previous
-output from the PRNG, is it possible to predict the next output value?*
-This is an important property in any situation where there might be an
-adversary.
-
-Regular PRNGs tend to be predictable, although with varying difficulty. In
-some cases prediction is trivial, for example plain Xorshift outputs part of
-its state without mutation, and prediction is as simple as seeding a new
-Xorshift generator from four `u32` outputs. Other generators, like
-[PCG](http://www.pcg-random.org/predictability.html) and truncated Xorshift*
-are harder to predict, but not outside the realm of common mathematics and a
-desktop PC.
-
-The basic security that CSPRNGs must provide is the infeasibility to predict
-output. This requirement is formalized as the [next-bit test]; this is
-roughly stated as: given the first *k* bits of a random sequence, the
-sequence satisfies the next-bit test if there is no algorithm able to
-predict the next bit using reasonable computing power.
-
-A further security that *some* CSPRNGs provide is forward secrecy:
-in the event that the CSPRNGs state is revealed at some point, it must be
-infeasible to reconstruct previous states or output. Note that many CSPRNGs
-*do not* have forward secrecy in their usual formulations.
-
-Verifying security claims of an algorithm is a *hard problem*, and we are not
-able to provide any guarantees of the security of algorithms used or recommended
-by this project. We refer you to the [NIST] institute and [ECRYPT] network
-for recommendations.
-
-### State and seeding
-
-It is worth noting that a CSPRNG's security relies absolutely on being
-seeded with a secure random key. Should the key be known or guessable, all
-output of the CSPRNG is easy to guess. This implies that the seed should
-come from a trusted source; usually either the OS or another CSPRNG. Our
-seeding helper trait, [`FromEntropy`], and the source it uses
-([`EntropyRng`]), should be secure. Additionally, [`ThreadRng`] is a CSPRNG,
-thus it is acceptable to seed from this (although for security applications
-fresh/external entropy should be preferred).
-
-Further, it should be obvious that the internal state of a CSPRNG must be
-kept secret. With that in mind, our implementations do not provide direct
-access to most of their internal state, and `Debug` implementations do not
-print any internal state. This does not fully protect CSPRNG state; code
-within the same process may read this memory (and we allow cloning and
-serialisation of CSPRNGs for convenience). Further, a running process may be
-forked by the operating system, which may leave both processes with a copy
-of the same generator.
-
-### Not a crypto library
-
-It should be emphasised that this is not a cryptography library; although
-Rand does take some measures to provide secure random numbers, it does not
-necessarily take all recommended measures. Further, cryptographic processes
-such as encryption and authentication are complex and must be implemented
-very carefully to avoid flaws and resist known attacks. It is therefore
-recommended to use specialized libraries where possible, for example
-[openssl], [ring] and the [RustCrypto libraries].
+**碰撞问题 (collisions) 和生日悖论 (birthday paradox) ！**
+如果生成器的输出值与其状态有相同的大小，
+那么建议不要让生成器产生多于 `√P` 数量的随机值（ `P` 是 RNG 的周期长度）。
+一般来说，具有 `kw`-bit 大小的状态和 `w`-bit 的 RNG 之间应确保 `kL² < P` 这样的关系。
+这个要求源自于广义的生日问题 (generalised birthday problem) ，
+这个问题求从一组大小为 `d = 2^w` 的总体中应抽取多少样本才能保证出现同一天生日的概率至少为 1/2 。
+要注意的是，对于 `kL² > P` 的情况，虽然具有 `kw` 维度的均匀分布的 RNG 不可能产生预计重复样本，
+但是不是多维均匀分布的 RNGs 也不能包装产生预计重复的数字。
 
 
-## Extra features
+## 安全性
 
-Some PRNGs may provide extra features, like:
+### 可预测性
 
-- Support for multiple streams, which can help with parallel tasks.
-- The ability to jump or seek around in the random number stream;
-with a large period this can be used as an alternative to streams.
+无论哪种 PRNG ，它们都面临一个问题：
+**假如已知这个 PRNG 以前的一些输出值，还可能预测接下来的输出值吗？**
+在任何可能出现敌手的情况下，（不）可预测性是一个很重要的性质。
 
+常规的 PRNGs 往往可以被预测，虽然预测准确的话可能要经历重重困难。
+有些情况下，预测可以轻而易举，比如单纯的 (plain) Xorshift 不加更改地输出其状态的时候，
+只需四个 `u32` 输出值就能像设置了随机种子一样把 Xorshift 完全预测出来。
+预测像 [PCG](http://www.pcg-random.org/predictability.html) 或者截断式 (truncated) Xorshift 
+这样的 RNGs 就困难得多，但是利用通常的数学知识和一台台式电脑，还是可以做到预测出它们的。
 
-## Further reading
+CSPRNGs 必须提供的最基础的安全保证是：预测输出值是完全不可能的。
+这个要求以 [next-bit test] 作为检验的标准，简单来说：
+给定一串随机序列的前 k bits ，如果没有算法能在合理的计算能力之下预测下一个 bit ，
+那么就称这个序列通过了 next-bit 测试。
 
-There is quite a lot that can be said about PRNGs. The [PCG paper] is very
-approachable and explains more concepts.
+某些 CSPRNGs 提供了更高的安全要求：向前保密 (forward secrecy) ,
+某时刻 CSPRNGs 的状态被暴露的情况下，依然不可能构造之前的状态或者输出值。
+注意，许多 CSPRNGs 通常在设计的时候并不考虑向前保密性。
 
-Another good paper about RNG quality is
-["Good random number generators are (not so) easy to find"](
-https://web.archive.org/web/20160801142711/http://random.mat.sbg.ac.at/results/peter/A19final.pdf)
-by P. Hellekalek.
+验证某个算法宣称的安全性是一个困难的，Rand 无法保证提供或推荐的算法的安全性。
+建议你参考 [NIST] 机构和 [ECRYPT] 。
 
+### 状态和种子
+
+值得注意的是，CSPRNGs 的安全性完全取决于提供给它的安全秘钥种子。
+如果秘钥已知或者可以被推测，那么这个 CSPRNG 所有的输出值都容易被推测出来。
+这意味着种子应该来源于可信赖的地方，通常要么是操作系统，要么是另一个的 CSPRNG 。
+
+Rand 提供的种子辅助 trait [`FromEntropy`] 和它所使用的 [`EntropyRng`] 来源 都应该是安全的。
+此外， [`ThreadRng`] 是一个 CSPRNG ，所以它可以作为其他算法的种子
+（虽然说安全应用应该优先使用全新的/外部的熵）。
+
+更进一步说，一个 CSPRNG 的内部状态显然必须保密。
+牢记这点之后，Rand 提供的实现并不直接接触大多数内部状态，
+而且 `Debug` 实现不会打印任何内部状态。
+这些还不足以保护 CSPRNGs 的状态；同一个进程内的代码可能读取状态的的内存，
+Rand 出于方便，允许复制和序列化 CSPRNGs 。
+甚至，运行中的进程可能被操作系统复制 (fork) ，这可能使两个进程具有同一生成器的复制品。
+
+### 非加密级库
+
+必须强调的一点是，Rand 不是一个达到加密级别库 (cryptography library)，
+虽然 Rand 采取一些方式来提供安全的随机数，但它不一定会采取所有推荐做法。
+而且像加密 (encryption) 和验证 (authentication) 这样的加密过程 (cryptographic processes)
+十分复杂，必须非常小心地实现才能避免纰漏和抵抗已知的攻击。
+所以建议尽可能使用专门用于加密领域的库，比如 [openssl] 、 [ring] 和 [RustCrypto libraries] 。
+
+## 额外特性
+
+某些 PRNGs 可能提供一些额外的特性，比如：
+
+- 支持多流，因而可以完成并行任务
+- 可以在随机数流中跳转或寻找；具有很大的周期，从而可用来替代流。
+
+## 延伸阅读
+
+关于 PRNGs 还有很多可以说的。
+这篇 [PCG paper] 非常容易理解，而且解释了更多概念。
+
+另一篇关于 RNG 质量的 paper 是 
+[好的 RNG 很（不）容易发现](https://web.archive.org/web/20160801142711/http://random.mat.sbg.ac.at/results/peter/A19final.pdf)[^RNG-paper]
+
+[^RNG-paper]: *Good random number generators are (not so) easy to find* 
 
 [`rngs`]: https://rust-random.github.io/rand/rand/rngs/index.html
 [`SmallRng`]: https://rust-random.github.io/rand/rand/rngs/struct.SmallRng.html
