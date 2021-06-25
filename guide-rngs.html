@@ -4,48 +4,35 @@
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
         <title>支持的 RNGs - The Rust Rand Book（中文版）</title>
-        
-        
-
+                
 
         <!-- Custom HTML head -->
         
-
 
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
         <meta name="description" content="Rust Rand 库的拓展文档">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff" />
 
-        
-        <link rel="icon" href="favicon.svg">
-        
-        
-        <link rel="shortcut icon" href="favicon.png">
-        
-        <link rel="stylesheet" href="css/variables.css">
+                <link rel="icon" href="favicon.svg">
+                        <link rel="shortcut icon" href="favicon.png">
+                <link rel="stylesheet" href="css/variables.css">
         <link rel="stylesheet" href="css/general.css">
         <link rel="stylesheet" href="css/chrome.css">
         
-
         <!-- Fonts -->
         <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+                <link rel="stylesheet" href="fonts/fonts.css">
         
-        <link rel="stylesheet" href="fonts/fonts.css">
-        
-
         <!-- Highlight.js Stylesheets -->
         <link rel="stylesheet" href="highlight.css">
         <link rel="stylesheet" href="tomorrow-night.css">
         <link rel="stylesheet" href="ayu-highlight.css">
 
         <!-- Custom theme stylesheets -->
+                <link rel="stylesheet" href="theme/pagetoc.css">
         
-        <link rel="stylesheet" href="theme/style.css">
-        
-
-        
-    </head>
+            </head>
     <body>
         <!-- Provide site root to javascript -->
         <script type="text/javascript">
@@ -95,8 +82,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="intro.html">简介</a></li><li class="chapter-item expanded "><a href="guide-start.html"><strong aria-hidden="true">1.</strong> 入门指引</a></li><li class="chapter-item expanded "><a href="crates.html"><strong aria-hidden="true">2.</strong> crates 和 features</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="crates-rand.html"><strong aria-hidden="true">2.1.</strong> Rand 与协作库</a></li><li class="chapter-item expanded "><a href="crates-gen.html"><strong aria-hidden="true">2.2.</strong> 随机数生成器</a></li></ol></li><li class="chapter-item expanded "><a href="guide.html"><strong aria-hidden="true">3.</strong> 使用指南</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="guide-data.html"><strong aria-hidden="true">3.1.</strong> 随机数据</a></li><li class="chapter-item expanded "><a href="guide-gen.html"><strong aria-hidden="true">3.2.</strong> 生成器的分类</a></li><li class="chapter-item expanded "><a href="guide-rngs.html" class="active"><strong aria-hidden="true">3.3.</strong> 支持的 RNGs</a></li><li class="chapter-item expanded "><a href="guide-seeding.html"><strong aria-hidden="true">3.4.</strong> 随机数种子</a></li><li class="chapter-item expanded "><a href="guide-values.html"><strong aria-hidden="true">3.5.</strong> 生成随机值</a></li><li class="chapter-item expanded "><a href="guide-dist.html"><strong aria-hidden="true">3.6.</strong> 概率分布</a></li><li class="chapter-item expanded "><a href="guide-seq.html"><strong aria-hidden="true">3.7.</strong> 生成随机序列</a></li><li class="chapter-item expanded "><a href="guide-err.html"><strong aria-hidden="true">3.8.</strong> 处理 Error</a></li></ol></li><li class="chapter-item expanded "><a href="portability.html"><strong aria-hidden="true">4.</strong> 移植性</a></li><li class="chapter-item expanded "><a href="update.html"><strong aria-hidden="true">5.</strong> 版本更新说明</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="update-0.5.html"><strong aria-hidden="true">5.1.</strong> 更新至 0.5</a></li><li class="chapter-item expanded "><a href="update-0.6.html"><strong aria-hidden="true">5.2.</strong> 更新至 0.6</a></li><li class="chapter-item expanded "><a href="update-0.7.html"><strong aria-hidden="true">5.3.</strong> 更新至 0.7</a></li><li class="chapter-item expanded "><a href="update-0.8.html"><strong aria-hidden="true">5.4.</strong> 更新至 0.8</a></li></ol></li><li class="chapter-item expanded "><a href="contributing.html"><strong aria-hidden="true">6.</strong> 贡献说明</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="contrib-doc.html"><strong aria-hidden="true">6.1.</strong> 文档要求</a></li><li class="chapter-item expanded "><a href="contrib-scope.html"><strong aria-hidden="true">6.2.</strong> 贡献范围</a></li><li class="chapter-item expanded "><a href="contrib-test.html"><strong aria-hidden="true">6.3.</strong> 代码测试</a></li><li class="chapter-item expanded "><a href="contrib-bench.html"><strong aria-hidden="true">6.4.</strong> 基准测试</a></li></ol></li></ol>
-            </div>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="intro.html">简介</a></li><li class="chapter-item expanded "><a href="guide-start.html"><strong aria-hidden="true">1.</strong> 入门指引</a></li><li class="chapter-item expanded "><a href="crates.html"><strong aria-hidden="true">2.</strong> crates 和 features</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="crates-rand.html"><strong aria-hidden="true">2.1.</strong> Rand 与协作库</a></li><li class="chapter-item expanded "><a href="crates-gen.html"><strong aria-hidden="true">2.2.</strong> 随机数生成器</a></li></ol></li><li class="chapter-item expanded "><a href="guide.html"><strong aria-hidden="true">3.</strong> 使用指南</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="guide-data.html"><strong aria-hidden="true">3.1.</strong> 随机数据</a></li><li class="chapter-item expanded "><a href="guide-gen.html"><strong aria-hidden="true">3.2.</strong> 生成器的分类</a></li><li class="chapter-item expanded "><a href="guide-rngs.html" class="active"><strong aria-hidden="true">3.3.</strong> 支持的 RNGs</a></li><li class="chapter-item expanded "><a href="guide-seeding.html"><strong aria-hidden="true">3.4.</strong> 随机数种子</a></li><li class="chapter-item expanded "><a href="guide-values.html"><strong aria-hidden="true">3.5.</strong> 生成随机值</a></li><li class="chapter-item expanded "><a href="guide-dist.html"><strong aria-hidden="true">3.6.</strong> 概率分布</a></li><li class="chapter-item expanded "><a href="guide-seq.html"><strong aria-hidden="true">3.7.</strong> 生成随机序列</a></li><li class="chapter-item expanded "><a href="guide-err.html"><strong aria-hidden="true">3.8.</strong> 处理 Error</a></li></ol></li><li class="chapter-item expanded "><a href="portability.html"><strong aria-hidden="true">4.</strong> 移植性</a></li><li class="chapter-item expanded "><a href="update.html"><strong aria-hidden="true">5.</strong> 版本更新说明</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="update-0.5.html"><strong aria-hidden="true">5.1.</strong> 更新至 0.5</a></li><li class="chapter-item expanded "><a href="update-0.6.html"><strong aria-hidden="true">5.2.</strong> 更新至 0.6</a></li><li class="chapter-item expanded "><a href="update-0.7.html"><strong aria-hidden="true">5.3.</strong> 更新至 0.7</a></li><li class="chapter-item expanded "><a href="update-0.8.html"><strong aria-hidden="true">5.4.</strong> 更新至 0.8</a></li></ol></li><li class="chapter-item expanded "><a href="contributing.html"><strong aria-hidden="true">6.</strong> 贡献说明</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="contrib-doc.html"><strong aria-hidden="true">6.1.</strong> 文档要求</a></li><li class="chapter-item expanded "><a href="contrib-scope.html"><strong aria-hidden="true">6.2.</strong> 贡献范围</a></li><li class="chapter-item expanded "><a href="contrib-test.html"><strong aria-hidden="true">6.3.</strong> 代码测试</a></li><li class="chapter-item expanded "><a href="contrib-bench.html"><strong aria-hidden="true">6.4.</strong> 基准测试</a></li></ol></li></ol>            </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
 
@@ -120,29 +106,22 @@
                             <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
                         </ul>
-                        
-                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                                                <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
                             <i class="fa fa-search"></i>
                         </button>
-                        
-                    </div>
+                                            </div>
 
                     <h1 class="menu-title">The Rust Rand Book（中文版）</h1>
 
                     <div class="right-buttons">
-                        
-                        
-                        <a href="https://github.com/zjp-CN/Rust-rand-book-CN" title="Git repository" aria-label="Git repository">
+                                                                        <a href="https://github.com/zjp-CN/Rust-Rand-Book-zh" title="Git repository" aria-label="Git repository">
                             <i id="git-repository-button" class="fa fa-github"></i>
                         </a>
-                        
-                        
-
+                                                
                     </div>
                 </div>
 
-                
-                <div id="search-wrapper" class="hidden">
+                                <div id="search-wrapper" class="hidden">
                     <form id="searchbar-outer" class="searchbar-outer">
                         <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
                     </form>
@@ -153,7 +132,6 @@
                     </div>
                 </div>
                 
-
                 <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
                 <script type="text/javascript">
                     document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
@@ -167,8 +145,26 @@
                     <main>
                         <!-- Page table of contents -->
                         <div class="sidetoc"><nav class="pagetoc"></nav></div>
-                        
-						<h1><a class="header" href="#支持的-rngs" id="支持的-rngs">支持的 RNGs</a></h1>
+
+                        <!-- Page table of contents -->
+                        <div class="sidetoc"><nav class="pagetoc"></nav></div>
+
+                        <!-- Page table of contents -->
+                        <div class="sidetoc"><nav class="pagetoc"></nav></div>
+
+                        <!-- Page table of contents -->
+                        <div class="sidetoc"><nav class="pagetoc"></nav></div>
+
+                        <!-- Page table of contents -->
+                        <div class="sidetoc"><nav class="pagetoc"></nav></div>
+
+                        <!-- Page table of contents -->
+                        <div class="sidetoc"><nav class="pagetoc"></nav></div>
+
+                        <!-- Page table of contents -->
+                        <div class="sidetoc"><nav class="pagetoc"></nav></div>
+
+                        <h1 id="支持的-rngs"><a class="header" href="#支持的-rngs">支持的 RNGs</a></h1>
 <p>有很多种 RNGs ，它们具有各自的优缺点。
 Rand 库在 <a href="https://rust-random.github.io/rand/rand/rngs/index.html"><code>rngs</code></a> 模块 里提供了一些方便的生成器。
 通常你可以使用 <a href="https://rust-random.github.io/rand/rand/fn.thread_rng.html"><code>thread_rng</code></a> 函数，它会在本地线程内存中自动初始化一个 RNG ，
@@ -182,8 +178,8 @@ Rand 库在 <a href="https://rust-random.github.io/rand/rand/rngs/index.html"><c
 <li><a href="#extra-features">Extra features</a></li>
 <li><a href="#further-reading">Further reading</a></li>
 </ol>
-<h1><a class="header" href="#介绍生成器" id="介绍生成器">介绍生成器</a></h1>
-<h2><a class="header" href="#基础的-prngs" id="基础的-prngs">基础的 PRNGs</a></h2>
+<h1 id="介绍生成器"><a class="header" href="#介绍生成器">介绍生成器</a></h1>
+<h2 id="基础的-prngs"><a class="header" href="#基础的-prngs">基础的 PRNGs</a></h2>
 <p>“标准的”非加密级别的 PRNGs 
 的目标常常是在易用、质量、内存占用和性能之间找到良好的平衡点。
 非加密级别的生成器时间上先于加密级别的生成器，
@@ -217,7 +213,7 @@ Rand 库在 <a href="https://rust-random.github.io/rand/rand/rngs/index.html"><c
 <li>★★★☆☆ = 性能和理论支持都很好，没什么大问题</li>
 <li>★★★★★ = 加密级的质量</li>
 </ul>
-<h2><a class="header" href="#加密级安全的-rngs-csprngs" id="加密级安全的-rngs-csprngs">加密级安全的 RNGs (CSPRNGs)</a></h2>
+<h2 id="加密级安全的-rngs-csprngs"><a class="header" href="#加密级安全的-rngs-csprngs">加密级安全的 RNGs (CSPRNGs)</a></h2>
 <p>CSPRNGs 比基础的 PRNGs 有更高的要求。主要是对安全的考虑。
 性能和易用也很重要，但是 CSPRNGs 一般更复杂一些，比常规的 PRNGs 更慢。
 质量不再是关心的重点，因为 CSPRNGs 生成的随机数基本上与真的随机值别无二致，
@@ -240,8 +236,8 @@ Rand 库在 <a href="https://rust-random.github.io/rand/rand/rngs/index.html"><c
 它们从一开始就和 Rust 语言一起被使用，
 它们可以良好地生成随机数，也没有被攻击成功过，
 但是并未得到加密学专家的关注。</p>
-<h1><a class="header" href="#评价生成器" id="评价生成器">评价生成器</a></h1>
-<h2><a class="header" href="#性能" id="性能">性能</a></h2>
+<h1 id="评价生成器"><a class="header" href="#评价生成器">评价生成器</a></h1>
+<h2 id="性能"><a class="header" href="#性能">性能</a></h2>
 <p>First it has to be said most PRNGs are very fast, and will rarely be a
 performance bottleneck.</p>
 <p>Performance of basic PRNGs is a bit of a subtle thing. It depends a lot on
@@ -257,12 +253,12 @@ here but merely a qualitative rating.</p>
 output in a cache, and pull outputs from the cache. This allows them to have
 good amortised performance, and reduces or completely removes the influence
 of surrounding code on the CSPRNG performance.</p>
-<h3><a class="header" href="#worst-case-performance" id="worst-case-performance">Worst-case performance</a></h3>
+<h3 id="worst-case-performance"><a class="header" href="#worst-case-performance">Worst-case performance</a></h3>
 <p>Simple PRNGs typically produce each random value on demand. In contrast, CSPRNGs
 usually produce a whole block at once, then read from this cache until it is
 exhausted, giving them much less consistent performance when drawing small
 quantities of random data.</p>
-<h3><a class="header" href="#memory-usage" id="memory-usage">Memory usage</a></h3>
+<h3 id="memory-usage"><a class="header" href="#memory-usage">Memory usage</a></h3>
 <p>Simple PRNGs often use very little memory, commonly only a few words, where
 a <em>word</em> is usually either <code>u32</code> or <code>u64</code>. This is not true for all
 non-cryptographic PRNGs however, for example the historically popular
@@ -272,13 +268,13 @@ to be at least 192 bits and some more may be required for the algorithm,
 256 bits would be approximately the minimum secure size. In practice,
 CSPRNGs tend to use quite a bit more, <a href="https://rust-random.github.io/rand/rand_chacha/struct.ChaChaRng.html"><code>ChaChaRng</code></a> is relatively small with
 136 bytes of state.</p>
-<h3><a class="header" href="#initialization-time" id="initialization-time">Initialization time</a></h3>
+<h3 id="initialization-time"><a class="header" href="#initialization-time">Initialization time</a></h3>
 <p>The time required to initialize new generators varies significantly. Many
 simple PRNGs and even some cryptographic ones (including <a href="https://rust-random.github.io/rand/rand_chacha/struct.ChaChaRng.html"><code>ChaChaRng</code></a>)
 only need to copy the seed value and some constants into their state, and
 thus can be constructed very quickly. In contrast, CSPRNGs with large state
 require an expensive key-expansion.</p>
-<h2><a class="header" href="#quality" id="quality">Quality</a></h2>
+<h2 id="quality"><a class="header" href="#quality">Quality</a></h2>
 <p>Many basic PRNGs are not much more than a couple of bitwise and arithmetic
 operations. Their simplicity gives good performance, but also means there
 are small regularities hidden in the generated random number stream.</p>
@@ -296,11 +292,11 @@ possible uses, the latest and most complete of which are <a href="http://simul.i
 <p>CSPRNGs tend to be more complex, and have an explicit requirement to be
 unpredictable. This implies there must be no obvious correlations between
 output values.</p>
-<h3><a class="header" href="#quality-stars" id="quality-stars">Quality stars:</a></h3>
+<h3 id="quality-stars"><a class="header" href="#quality-stars">Quality stars:</a></h3>
 <p>PRNGs with 3 stars or more should be good enough for most non-crypto
 applications. 1 or 2 stars may be good enough for typical apps and games, but do
 not work well with all algorithms.</p>
-<h3><a class="header" href="#period" id="period">Period</a></h3>
+<h3 id="period"><a class="header" href="#period">Period</a></h3>
 <p>The <em>period</em> or <em>cycle length</em> of a PRNG is the number of values that can be
 generated after which it starts repeating the same random number stream.
 Many PRNGs have a fixed-size period, while for others (&quot;chaotic RNGs&quot;) the
@@ -332,8 +328,8 @@ Note that for <code>kL² &gt; P</code> a generator with <code>kw</code>-dimensio
 <em>cannot</em> generate the expected number of repeated samples, however generators
 without this property are <em>also</em> not guaranteed to generate the expected number
 of repeats.</p>
-<h2><a class="header" href="#security" id="security">Security</a></h2>
-<h3><a class="header" href="#predictability" id="predictability">Predictability</a></h3>
+<h2 id="security"><a class="header" href="#security">Security</a></h2>
+<h3 id="predictability"><a class="header" href="#predictability">Predictability</a></h3>
 <p>From the context of any PRNG, one can ask the question <em>given some previous
 output from the PRNG, is it possible to predict the next output value?</em>
 This is an important property in any situation where there might be an
@@ -358,7 +354,7 @@ infeasible to reconstruct previous states or output. Note that many CSPRNGs
 able to provide any guarantees of the security of algorithms used or recommended
 by this project. We refer you to the <a href="https://www.nist.gov/">NIST</a> institute and <a href="http://www.ecrypt.eu.org/">ECRYPT</a> network
 for recommendations.</p>
-<h3><a class="header" href="#state-and-seeding" id="state-and-seeding">State and seeding</a></h3>
+<h3 id="state-and-seeding"><a class="header" href="#state-and-seeding">State and seeding</a></h3>
 <p>It is worth noting that a CSPRNG's security relies absolutely on being
 seeded with a secure random key. Should the key be known or guessable, all
 output of the CSPRNG is easy to guess. This implies that the seed should
@@ -375,7 +371,7 @@ within the same process may read this memory (and we allow cloning and
 serialisation of CSPRNGs for convenience). Further, a running process may be
 forked by the operating system, which may leave both processes with a copy
 of the same generator.</p>
-<h3><a class="header" href="#not-a-crypto-library" id="not-a-crypto-library">Not a crypto library</a></h3>
+<h3 id="not-a-crypto-library"><a class="header" href="#not-a-crypto-library">Not a crypto library</a></h3>
 <p>It should be emphasised that this is not a cryptography library; although
 Rand does take some measures to provide secure random numbers, it does not
 necessarily take all recommended measures. Further, cryptographic processes
@@ -383,14 +379,14 @@ such as encryption and authentication are complex and must be implemented
 very carefully to avoid flaws and resist known attacks. It is therefore
 recommended to use specialized libraries where possible, for example
 <a href="https://crates.io/crates/openssl">openssl</a>, <a href="https://crates.io/crates/ring">ring</a> and the <a href="https://github.com/RustCrypto">RustCrypto libraries</a>.</p>
-<h2><a class="header" href="#extra-features" id="extra-features">Extra features</a></h2>
+<h2 id="extra-features"><a class="header" href="#extra-features">Extra features</a></h2>
 <p>Some PRNGs may provide extra features, like:</p>
 <ul>
 <li>Support for multiple streams, which can help with parallel tasks.</li>
 <li>The ability to jump or seek around in the random number stream;
 with a large period this can be used as an alternative to streams.</li>
 </ul>
-<h2><a class="header" href="#further-reading" id="further-reading">Further reading</a></h2>
+<h2 id="further-reading"><a class="header" href="#further-reading">Further reading</a></h2>
 <p>There is quite a lot that can be said about PRNGs. The <a href="http://www.pcg-random.org/pdf/hmc-cs-2014-0905.pdf">PCG paper</a> is very
 approachable and explains more concepts.</p>
 <p>Another good paper about RNG quality is
@@ -401,75 +397,55 @@ by P. Hellekalek.</p>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                        
-                            <a rel="prev" href="guide-gen.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                                    <a rel="prev" href="guide-gen.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
                         
-
-                        
-                            <a rel="next" href="guide-seeding.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                                    <a rel="next" href="guide-seeding.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
                         
-
                         <div style="clear: both"></div>
                     </nav>
                 </div>
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                
-                    <a rel="prev" href="guide-gen.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                    <a rel="prev" href="guide-gen.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
                 
-
-                
-                    <a rel="next" href="guide-seeding.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                    <a rel="next" href="guide-seeding.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
-                
-            </nav>
+                            </nav>
 
         </div>
 
         
-
         
-
         
-
-        
-        <script type="text/javascript">
+                <script type="text/javascript">
             window.playground_copyable = true;
         </script>
         
-
-        
-        <script src="ace.js" type="text/javascript" charset="utf-8"></script>
+                <script src="ace.js" type="text/javascript" charset="utf-8"></script>
         <script src="editor.js" type="text/javascript" charset="utf-8"></script>
         <script src="mode-rust.js" type="text/javascript" charset="utf-8"></script>
         <script src="theme-dawn.js" type="text/javascript" charset="utf-8"></script>
         <script src="theme-tomorrow_night.js" type="text/javascript" charset="utf-8"></script>
         
-
-        
-        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+                <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
         <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
         <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
         
-
         <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
         <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
         <script src="book.js" type="text/javascript" charset="utf-8"></script>
 
         <!-- Custom JS scripts -->
+                <script type="text/javascript" src="theme/pagetoc.js"></script>
         
-        <script type="text/javascript" src="theme/sidebar.js"></script>
         
-
-        
-
     </body>
 </html>
