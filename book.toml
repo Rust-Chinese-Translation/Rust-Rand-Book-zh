@@ -6,13 +6,23 @@ title = "The Rust Rand Book（中文版）"
 description = "Rust Rand 库的拓展文档"
 language = "zh"
 
+[preprocessor.theme]
+pagetoc = true
+sidebar-width     = "210px"
+pagetoc-width     = "10%"
+content-max-width = "85%"
+
 [output.html]
-git-repository-url = "https://github.com/zjp-CN/Rust-rand-book-CN"
-additional-css = ["theme/style.css"]
-additional-js = ["theme/sidebar.js"]
+git-repository-url = "https://github.com/zjp-CN/Rust-Rand-Book-zh"
+additional-css = ["theme/pagetoc.css"]
+additional-js = ["theme/pagetoc.js"]
 
 [output.html.playground]
 editable = true
 
 [output.html.print]
 enable = false
+
+[output.theme-ace]
+theme-white = "xcode"
+theme-dark = "monokai"
