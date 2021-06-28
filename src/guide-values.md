@@ -1,41 +1,34 @@
-# Random values
+# 生成随机值
 
-Now that we have a way of producing random data, how can we convert it to the
-type of value we want?
+我们已经有办法生成随机数据，但如何把数据转化成我们想要的类型的值呢？
 
-This is a trick question: we need to know both the *range* we want and the type
-of *distribution* of this value (which is what the [`next`](guide-dist.md) section
-is all about).
+这是一个难题：我们既需要知道 **范围** ，又需要知道这个值的 **分布** 。
+对于分布，将在 [下一章](guide-dist.md) 介绍。
 
-## The `Rng` trait
+## `Rng` trait
 
-For convenience, all generators automatically implement the [`Rng`] trait,
-which provides short-cuts to a few ways of generating values. This has several
-convenience functions for producing uniformly distributed values:
+方便起见，所有的 RNG 自动实现了 [`Rng`] trait ，从而方便地生成随机值。
+以下是方便生成均匀分布随机值的一些函数（方法）：
 
--   [`Rng::gen`] generates an unbiased (uniform) random value from a range
-    appropriate for the
-    type. For integers this is normally the full representable range
-    (e.g. from `0u32` to `std::u32::MAX`), for floats this is between 0 and 1,
-    and some other types are supported, including arrays and tuples.
+-   [`Rng::gen`] 从类型合适的范围内生成无偏均匀分布的随机值。
+    对于整数，通常在整个范围内产生值（比如从 `0u32` 到 `std::u32::MAX` 生成 `u32` 类型的值）；
+    对于浮点数，从 0-1 内产生值；也支持一些其他类型，比如数组和元组。
     
-    This method is a convenience wrapper around the [`Standard`] distribution,
-    as documented in the [next section](guide-dist.html#uniform-distributions).
--   [`Rng::gen_range`] generates an unbiased random value in the given range
--   [`Rng::fill`] and [`Rng::try_fill`] are optimised functions for filling any byte or
-    integer slice with random values
+    这个方法能很方便地生成 [标准正态分布][`Standard`] ，这在
+    [下一章](guide-dist.html#uniform-distributions) 会介绍。
+-   [`Rng::gen_range`] 在给定的范围内生成无偏随机值。
+-   [`Rng::fill`] 和 [`Rng::try_fill`] 是经过优化的函数，用来给字节或者整数切片填充随机值。
 
-It also has convenience functions for producing non-uniform boolean values:
+以下方法能方便生成非均匀分布的 bool 值：
 
--   [`Rng::gen_bool`] generates a boolean with the given probability
--   [`Rng::gen_ratio`] also generates a boolean, where the probability is defined
-    via a fraction
+-   [`Rng::gen_bool`] 以给定概率生成一个 bool 值 
+-   [`Rng::gen_ratio`] 以分数形式的概率生成一个 bool 值
 
-Finally, it has a function to sample from arbitrary distributions:
+最后，这个函数能从任意分布中抽样产生随机值：
 
--   [`Rng::sample`] samples directly from some [distribution](guide-dist.md)
+-   [`Rng::sample`] 直接从某些 [分布](guide-dist.md) 中抽样
 
-Examples:
+例子：
 
 ```rust
 # extern crate rand;
@@ -52,7 +45,8 @@ let x: f64 = rng.gen();
 let roll = rng.gen_range(1..7);
 ```
 
-Additionally, the [`random`] function is a short-cut to [`Rng::gen`] on the [`thread_rng`]:
+此外， [`random`] 函数基于 [`thread_rng`] 来调用 [`Rng::gen`] ，是产生随机值的捷径。
+
 ```rust
 if rand::random() {
     println!("we got lucky!");
