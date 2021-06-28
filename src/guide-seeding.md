@@ -1,27 +1,26 @@
-# Seeding RNGs
+# 随机数种子
 
-As we have seen, the output of pseudo-random number generators (PRNGs) is
-determined by their initial state.
+PRNGs 的输出值由初始状态决定。
+有些 PRNG 从定义中指明了初始状态应该如何从秘钥 (key) 生成，
+初始状态通常作为字节序列来传递给加密级生成器或者以一个字 (word) 传递给小型的 PRNGs 。
+Rand 用 [`SeedableRng`] trait 来把这种形式统一起来，从而适用于 Rand 定义的生成器。
 
-Some PRNG definitions specify how the initial state should be generated from a
-key, usually specified as a byte-sequence for cryptographic generators or,
-for small PRNGs, often just a word. We formalise this for all our generators
-with the [`SeedableRng`] trait.
+## 种子类型
 
-## The Seed type
+Rand 要求所有支持种子的 RNGs 需定义一个 [`Seed`] 关联类型，
+这个类型需满足 `AsMut<[u8]> + Default + Sized` 。
 
-We require all seedable RNGs to define a [`Seed`] type satisfying
-`AsMut<[u8]> + Default + Sized` (usually `[u8; N]` for a fixed `N`).
-We recommend using `[u8; 12]` or larger for non-cryptographic PRNGs and
-`[u8; 32]` for cryptographic PRNGs.
+通常对于生成固定的 `N` 个随机值则使用  `[u8; N]` 类型：
+对于非加密级的 PRNGs 建议使用 `[u8; 12]` 或更大长度的数组；
+对于 CSPRNGs 则建议使用 `[u8; 32]` 。
 
-PRNGs may be seeded directly from such a value with [`SeedableRng::from_seed`].
+PRNGs 可以直接使用 [`SeedableRng::from_seed`] 来设置种子的值。
 
-## Seeding from ...
+## 种子的来源
 
-### Fresh entropy
+### 全新的熵
 
-Using a fresh seed (direct from the OS) is easy using [`SeedableRng::from_entropy`]:
+使用 [`SeedableRng::from_entropy`] 可以很容易地直接从操作系统设置新的种子。
 
 ```rust,editable
 use rand::prelude::*;
@@ -30,12 +29,12 @@ use rand_chacha::ChaCha20Rng;
 let rng = ChaCha20Rng::from_entropy();
 ```
 
-Note that this requires `rand_core` has the feature `getrandom` enabled.
+注意，这需要让 `rand_core` 开启 `getrandom` feature 。
 
-### Another RNG
+### 另一个 RNG
 
-Quite obviously, another RNG may be used to fill a seed. We provide a
-convenience method for this:
+很明显，另一个 RNG 也可以作为种子。
+Rand 为此提供了一个很方便的方法：
 
 ```rust,editable
 use rand::prelude::*;
@@ -44,8 +43,7 @@ use rand_pcg::Pcg64;
 let rng = Pcg64::from_rng(thread_rng());
 ```
 
-But, say you want to save a key and use it later. For that you need to be a
-little bit more explicit:
+但是，如果说你想保存秘钥，然后之后再使用秘钥，那么，你需要更显式地指明：
 
 ```rust,editable
 use rand::prelude::*;
@@ -56,22 +54,26 @@ thread_rng().fill(&mut seed);
 let rng = ChaCha8Rng::from_seed(seed);
 ```
 
-**Obligatory warning**: a few simple PRNGs, notably [`XorShiftRng`],
-behave badly when seeded from the same type of generator (in this case, Xorshift
-generates a clone). For cryptographic PRNGs this is not a problem;
-for others it is recommended to seed from a different type of generator.
-[`ChaCha8Rng`] is an excellent choice for a deterministic master generator
-(but for cryptographic uses, prefer the 12-round variant or higher).
+**警告**：
+有些简单的 PRNGs，尤其是 [`XorShiftRng`] ，
+给它们设置同类 PRNG 的种子时，效果并不好
+（比如这种情况下， Xorshift 会生成一份复制品）。
+对于加密级的 PRNGs ，设置同类 PRNG 没什么问题；
+但是对应非加密级的 PRNGs ，建议从不同的 PRNG 生成种子。
+对于确定性的主生成器 (deterministic master generator)，
+使用 [`ChaCha8Rng`] 是个不错的选中。
+在加密场景，则建议 [`ChaCha12Rng`] 或更高的版本。
 
-### A simple number
+[`ChaCha12Rng`]:https://rust-random.github.io/rand/rand_chacha/struct.ChaCha12Rng.html
 
-For some applications, especially simulations, all you want are a sequence of
-distinct, fixed random number seeds, e.g. 1, 2, 3, etc.
+### 一个简单的数字
 
-[`SeedableRng::seed_from_u64`] is designed exactly for this use-case.
-Internally, it uses a simple PRNG to fill the bits of the seed from the input
-number while providing good bit-avalance (so that two similar numbers such as
-0 and 1 translate to very different seeds and independent RNG sequences).
+有些应用，尤其是模拟领域，你所需要的只是一串确切的、固定的随机数种子，
+比如 1, 2, 3 等。
+
+那么 [`SeedableRng::seed_from_u64`] 就是专门为这种情况提供给你的。
+其背后使用一个简单的 PRNG 来从输入值填充种子的 bits ，
+从而让两个相近的数字，比如 0 和 1 分别产生完全不同且独立的 RNG 序列。
 
 ```rust,editable
 use rand::prelude::*;
@@ -80,18 +82,18 @@ use rand_pcg::Pcg64;
 let rng = Pcg64::seed_from_u64(2);
 ```
 
-Note that a number with 64-bits or less **cannot be secure**, so this should
-not be used for applications such as cryptography or gambling games.
+注意，一个 64-bits 或低于 64-bits 的数字不可能保证安全，
+所以这不应该应用在加密领域或者赌博游戏上。
 
-### A string, or any hashable data
+### 字符串或散列值
 
-Say you let users enter a string to seed the random number generator. Ideally,
-all parts of the string should influence the generator and making only a small
-change to the string should result in a fully independent generator sequence.
+当你让用户输入字符串从而给 RNG 设置种子时，
+理想情况下字符串的所有部分应该都会影响 RNG ，
+而且对这个字符串做出很小的更改都应该产生完全独立的随机数序列。
 
-This can be achieved via use of a hash function to compress all input data down
-to a hash result, then using that result to seed a generator. The
-[`rand_seeder`] crate is designed for just this purpose.
+这可以通过使用 hash 函数，压缩所有输入数据到一个散列值，
+然后把这个值用于给 RNG 提供种子。
+[`rand_seeder`] crate 就是专门为这种情况设计的。
 
 ```rust,editable
 use rand::prelude::*;
@@ -114,10 +116,11 @@ hasher_rng.fill(&mut seed);
 let rng = Pcg64::from_seed(seed);
 ```
 
-Note that `rand_seeder` is **not suitable** for cryptographic usage.
-It is **not a password hasher**, for such applications a key-derivation
-function such as Argon2 must be used.
+注意 `rand_seeder` **不适合** 加密级场景，
+它也不提供密码散列 (password hasher) ，
+所以对于秘钥衍生 (key-derivation) 的应用，请使用 [Argon2] 这样的 crate 。
 
+[Argon2]:https://docs.rs/argon2/*/argon2/
 
 [`SeedableRng`]: https://rust-random.github.io/rand/rand_core/trait.SeedableRng.html
 [`Seed`]: https://rust-random.github.io/rand/rand_core/trait.SeedableRng.html#type.Seed
