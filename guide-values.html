@@ -191,45 +191,38 @@
                         <!-- Page table of contents -->
                         <div class="sidetoc"><nav class="pagetoc"></nav></div>
 
-                        <h1 id="random-values"><a class="header" href="#random-values">Random values</a></h1>
-<p>Now that we have a way of producing random data, how can we convert it to the
-type of value we want?</p>
-<p>This is a trick question: we need to know both the <em>range</em> we want and the type
-of <em>distribution</em> of this value (which is what the <a href="guide-dist.html"><code>next</code></a> section
-is all about).</p>
-<h2 id="the-rng-trait"><a class="header" href="#the-rng-trait">The <code>Rng</code> trait</a></h2>
-<p>For convenience, all generators automatically implement the <a href="https://rust-random.github.io/rand/rand/trait.Rng.html"><code>Rng</code></a> trait,
-which provides short-cuts to a few ways of generating values. This has several
-convenience functions for producing uniformly distributed values:</p>
+                        <h1 id="生成随机值"><a class="header" href="#生成随机值">生成随机值</a></h1>
+<p>我们已经有办法生成随机数据，但如何把数据转化成我们想要的类型的值呢？</p>
+<p>这是一个难题：我们既需要知道 <strong>范围</strong> ，又需要知道这个值的 <strong>分布</strong> 。
+对于分布，将在 <a href="guide-dist.html">下一章</a> 介绍。</p>
+<h2 id="rng-trait"><a class="header" href="#rng-trait"><code>Rng</code> trait</a></h2>
+<p>方便起见，所有的 RNG 自动实现了 <a href="https://rust-random.github.io/rand/rand/trait.Rng.html"><code>Rng</code></a> trait ，从而方便地生成随机值。
+以下是方便生成均匀分布随机值的一些函数（方法）：</p>
 <ul>
 <li>
-<p><a href="https://rust-random.github.io/rand/rand/trait.Rng.html#method.gen"><code>Rng::gen</code></a> generates an unbiased (uniform) random value from a range
-appropriate for the
-type. For integers this is normally the full representable range
-(e.g. from <code>0u32</code> to <code>std::u32::MAX</code>), for floats this is between 0 and 1,
-and some other types are supported, including arrays and tuples.</p>
-<p>This method is a convenience wrapper around the <a href="https://rust-random.github.io/rand/rand/distributions/struct.Standard.html"><code>Standard</code></a> distribution,
-as documented in the <a href="guide-dist.html#uniform-distributions">next section</a>.</p>
+<p><a href="https://rust-random.github.io/rand/rand/trait.Rng.html#method.gen"><code>Rng::gen</code></a> 从类型合适的范围内生成无偏均匀分布的随机值。
+对于整数，通常在整个范围内产生值（比如从 <code>0u32</code> 到 <code>std::u32::MAX</code> 生成 <code>u32</code> 类型的值）；
+对于浮点数，从 0-1 内产生值；也支持一些其他类型，比如数组和元组。</p>
+<p>这个方法能很方便地生成 <a href="https://rust-random.github.io/rand/rand/distributions/struct.Standard.html">标准正态分布</a> ，这在
+<a href="guide-dist.html#uniform-distributions">下一章</a> 会介绍。</p>
 </li>
 <li>
-<p><a href="https://rust-random.github.io/rand/rand/trait.Rng.html#method.gen_range"><code>Rng::gen_range</code></a> generates an unbiased random value in the given range</p>
+<p><a href="https://rust-random.github.io/rand/rand/trait.Rng.html#method.gen_range"><code>Rng::gen_range</code></a> 在给定的范围内生成无偏随机值。</p>
 </li>
 <li>
-<p><a href="https://rust-random.github.io/rand/rand/trait.Rng.html#method.fill"><code>Rng::fill</code></a> and <a href="https://rust-random.github.io/rand/rand/trait.Rng.html#method.try_fill"><code>Rng::try_fill</code></a> are optimised functions for filling any byte or
-integer slice with random values</p>
+<p><a href="https://rust-random.github.io/rand/rand/trait.Rng.html#method.fill"><code>Rng::fill</code></a> 和 <a href="https://rust-random.github.io/rand/rand/trait.Rng.html#method.try_fill"><code>Rng::try_fill</code></a> 是经过优化的函数，用来给字节或者整数切片填充随机值。</p>
 </li>
 </ul>
-<p>It also has convenience functions for producing non-uniform boolean values:</p>
+<p>以下方法能方便生成非均匀分布的 bool 值：</p>
 <ul>
-<li><a href="https://rust-random.github.io/rand/rand/trait.Rng.html#method.gen_bool"><code>Rng::gen_bool</code></a> generates a boolean with the given probability</li>
-<li><a href="https://rust-random.github.io/rand/rand/trait.Rng.html#method.gen_ratio"><code>Rng::gen_ratio</code></a> also generates a boolean, where the probability is defined
-via a fraction</li>
+<li><a href="https://rust-random.github.io/rand/rand/trait.Rng.html#method.gen_bool"><code>Rng::gen_bool</code></a> 以给定概率生成一个 bool 值 </li>
+<li><a href="https://rust-random.github.io/rand/rand/trait.Rng.html#method.gen_ratio"><code>Rng::gen_ratio</code></a> 以分数形式的概率生成一个 bool 值</li>
 </ul>
-<p>Finally, it has a function to sample from arbitrary distributions:</p>
+<p>最后，这个函数能从任意分布中抽样产生随机值：</p>
 <ul>
-<li><a href="https://rust-random.github.io/rand/rand/trait.Rng.html#method.sample"><code>Rng::sample</code></a> samples directly from some <a href="guide-dist.html">distribution</a></li>
+<li><a href="https://rust-random.github.io/rand/rand/trait.Rng.html#method.sample"><code>Rng::sample</code></a> 直接从某些 <a href="guide-dist.html">分布</a> 中抽样</li>
 </ul>
-<p>Examples:</p>
+<p>例子：</p>
 <pre><pre class="playground"><code class="language-rust">
 <span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
@@ -247,7 +240,7 @@ let x: f64 = rng.gen();
 let roll = rng.gen_range(1..7);
 <span class="boring">}
 </span></code></pre></pre>
-<p>Additionally, the <a href="https://rust-random.github.io/rand/rand/fn.random.htm"><code>random</code></a> function is a short-cut to <a href="https://rust-random.github.io/rand/rand/trait.Rng.html#method.gen"><code>Rng::gen</code></a> on the <a href="https://rust-random.github.io/rand/rand/fn.thread_rng.html"><code>thread_rng</code></a>:</p>
+<p>此外， <a href="https://rust-random.github.io/rand/rand/fn.random.htm"><code>random</code></a> 函数基于 <a href="https://rust-random.github.io/rand/rand/fn.thread_rng.html"><code>thread_rng</code></a> 来调用 <a href="https://rust-random.github.io/rand/rand/trait.Rng.html#method.gen"><code>Rng::gen</code></a> ，是产生随机值的捷径。</p>
 <pre><pre class="playground"><code class="language-rust">
 <span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
