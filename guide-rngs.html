@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html lang="zh" class="sidebar-visible no-js light">
+<html lang="zh" class="sidebar-visible no-js ayu">
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
@@ -37,7 +37,7 @@
         <!-- Provide site root to javascript -->
         <script type="text/javascript">
             var path_to_root = "";
-            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "ayu";
         </script>
 
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
@@ -63,7 +63,7 @@
             if (theme === null || theme === undefined) { theme = default_theme; }
             var html = document.querySelector('html');
             html.classList.remove('no-js')
-            html.classList.remove('light')
+            html.classList.remove('ayu')
             html.classList.add(theme);
             html.classList.add('js');
         </script>
@@ -100,11 +100,11 @@
                             <i class="fa fa-paint-brush"></i>
                         </button>
                         <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu (default)</button></li>
                         </ul>
                                                 <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
                             <i class="fa fa-search"></i>
@@ -281,7 +281,7 @@ Rand 库在 <a href="https://rust-random.github.io/rand/rand/rngs/index.html"><c
 <p>初始化新生成器的时间差异很明显。
 很多简单的 PRNGs 、甚至某些加密级 PRNGs （包括 <a href="https://rust-random.github.io/rand/rand_chacha/struct.ChaChaRng.html"><code>ChaChaRng</code></a> ）都只需要
 把种子的值和一些常量复制进状态里面，因此它们能很快地构造一个生成器。
-而具有很大状态的 CSPRNGs 正相反，需要长时间的键展开 (key-expansion) 。</p>
+而具有很大状态的 CSPRNGs 正相反，需要长时间的秘钥展开 (key-expansion) 。</p>
 <h2 id="随机数的质量"><a class="header" href="#随机数的质量">随机数的质量</a></h2>
 <p>许多基础的 PRNGs 只不过是一些位运算和算术运算。
 它们的简单性提供了良好的性能，但也意味着在生成的随机数流中隐藏了一些小的规则。</p>
