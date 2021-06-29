@@ -1,5 +1,7 @@
 # Updating
 
+> 鉴于个人原因，这之后的部分译者并不打算翻译。
+
 This guide is intended to facilitate upgrading to the next minor or major
 version of Rand. Note that updating to the next patch version (e.g. 0.5.1 to
 0.5.2) should never require code changes.
