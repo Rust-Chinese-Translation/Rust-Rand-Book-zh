@@ -1,67 +1,60 @@
-# Portability
+# 移植性
 
-## Definitions
+## 定义
 
-Given fixed inputs, all items (should) fall into one of three categories:
+给定输入，输出应该属于以下三类中的一类：
 
--   Output is non-deterministic, thus never reproducible
--   Output is deterministic, but not considered portable
--   Output is deterministic and portable
+-   输出是非确定的，所以无法重现
+-   输出是确定的，但不是可移植的
+-   输出是确定的，而且是可移植的
 
-In general, functionality is considered deterministic and portable *unless*
-it is clearly non-deterministic (e.g. `getrandom`, `ThreadRng`) *or* it is
-documented as being unportable (e.g. `StdRng`, `SmallRng`).
+一般而言，功能 (functionality) 是确定的、可移植的。
+除非有些功能（比如 `getrandom`、 `ThreadRng`）显然不是确定的，
+或者有些功能（比如 `StdRng`、 `SmallRng`）在文档中说明是不可移植的。
 
-## Crate versions
+## crate 版本
 
-We try to follow [semver rules](https://docs.npmjs.com/misc/semver) regarding
-API-breaking changes and `MAJOR.MINOR.PATCH` versions:
+Rand 尽量遵循 [版本规则](https://docs.npmjs.com/misc/semver) ，
+即涉及不兼容的 API 时，遵循 `MAJOR.MINOR.PATCH` 版本号规则：
 
--   New *patch* versions should not include API-breaking changes or major new
-    features
--   Before 1.0, *minor* versions may include API breaking changes. After 1.0
-    they should not.
+-   每次发布新的 *patch* （补丁）版本中，不应该有不兼容的 API 变动或添加主特性
+-   在 1.0 版本前，每次发布新的 *minor* （次）版本中，可能有不兼容的 API 变动。 
+-   在 1.0 版本之后，发布新的次版本中，不应该有不兼容的 API 变动。
 
-Additionally, we must also consider *value-breaking changes* and *portability*.
-When given fixed inputs,
+此外，Rand 还必须考虑不兼容的值更改和移植性。给定输入：
 
--   For non-deterministic items, implementations may change in any release
--   For deterministic unportable items, output should be preserved in patch
-    releases, but may change in any minor release (including after 1.0)
--   For portable items, any change of output across versions is considered
-    equivalent to an API breaking change.
+-   对于非确定的条目，其实现可能在任何发行版中变动。
+-   对于确定的、不可移植的条目，补丁版本应保持输出结果不变，次版本可以更改输出结果
+    （包括 1.0 之后的次版本）。
+-   对于可移植的条目，任何输出值的变动等同于非兼容性 API 变动。
 
-### Testing
+### 测试
 
-We expect all pseudo-random algorithms to test the value-stability of their
-output, where possible:
+Rand 希望所有伪随机数算法在可能的时候能稳定地测试输出值：
 
--   PRNGs should be compared with a reference vector ([example](https://github.com/rust-random/rngs/blob/master/rand_xoshiro/src/xoshiro256starstar.rs#L113))
--   Other algorithms should include their own test vectors within a
-    `value_stability` test or similar ([example](https://github.com/rust-random/rand/blob/master/src/distributions/bernoulli.rs#L168))
+-   PRNGs 应该和 vector 的引用进行比较。
+    （[例子](https://github.com/rust-random/rngs/blob/master/rand_xoshiro/src/xoshiro256starstar.rs#L113)）
+-   其他算法应该在 `value_stability` 测试或相似的测试代码中包含用于测试的 vector
+    （[例子](https://github.com/rust-random/rand/blob/master/src/distributions/bernoulli.rs#L168)）
 
-## Limitations
+## 限制
 
-### Portability of usize
+### usize 的移植性
 
-There is unfortunately one non-portable item baked into the heart of the Rust
-language: `usize` (and `isize`). For example, the size of an empty
-`Vec` will differ on 32-bit and 64-bit targets. For most purposes this is not an
-issue, but when it comes to generating random numbers in a portable manner
-it does matter.
+不巧，有一个 Rust 核心条目是不可移植的：`usize` （和 `isize`）。
+比如一个空 `Vec` 在 32 位 和 64 位机器上大小不同。
+对大多数使用场景，这没啥大问题，但涉及以移植的方式产生随机数时，这问题很大。
 
-A simple rule follows: if portability is required, *never* sample a `usize` or
-`isize` value directly.
+Rand 在任何可以遵循的时候，都遵循一条简单的规则：
+如果需要移植性，就别直接对 `usize` 或 `isize` 类型的数据抽样。
 
-Within Rand we adhere to this rule whenever possible. All sequence-releated
-code requiring a bounded `usize` value will sample a `u32` value unless the
-upper bound exceeds `u32::MAX`.
-(Note that this actually improves benchmark performance in many cases.)
+所有涉及序列的代码中，要求 `usize` 边界值的时候， Rand 都会抽取 `u32` 的值，
+除非序列的上界超过了 `u32::MAX` 。
+注意，这其实在很多情况下提高了基准测试的性能。
 
-### Portability of floats
+### 浮点数的移植性
 
-The results of floating point arithmetic depend on rounding modes and
-implementation details. Especially the results of transcendental functions vary
-from platform to platform. Due to this, the distributions in `rand_distr` are
-not always portable for `f32` and `f64`. However, we strive to make them as
-portable as possible.
+计算浮点数的结果取决于取整方式和实现的细节。
+尤其是超越函数 (transcendental functions) 的计算结果在每个平台上都不一样。
+所以， `rand_distr` crate 里的分布对 `f32` 和 `f64` 类型不总是可移植的，
+但 Rand 尽量让浮点数具有移植性。
