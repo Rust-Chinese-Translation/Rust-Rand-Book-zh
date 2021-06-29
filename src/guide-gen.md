@@ -121,4 +121,4 @@ HRNGs 或许可以完全替代 PRNGs ，
 保守地假设每个时间戳只有一些熵。 
 
 [`RngCore`]: https://rust-random.github.io/rand/rand_core/trait.RngCore.html
-[`JitterRng`]: https://rust-random.github.io/rand/rand/rngs/jitter/struct.JitterRng.html
+[`JitterRng`]: https://docs.rs/rand_jitter/*/rand_jitter/struct.JitterRng.html
