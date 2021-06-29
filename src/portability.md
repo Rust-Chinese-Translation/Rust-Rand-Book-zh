@@ -14,6 +14,8 @@
 
 ## crate 版本
 
+### 规则
+
 Rand 尽量遵循 [版本规则](https://docs.npmjs.com/misc/semver) ，
 即涉及不兼容的 API 时，遵循 `MAJOR.MINOR.PATCH` 版本号规则：
 
