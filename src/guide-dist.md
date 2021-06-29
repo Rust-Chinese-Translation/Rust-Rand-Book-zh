@@ -1,7 +1,7 @@
-# Random distributions
+# 随机分布
 
-For maximum flexibility when producing random values, we define the
-[`Distribution`] trait:
+为了最大程度地提供生成随机值的灵活性，
+Rand 定义了 [`Distribution`] trait ：
 
 ```rust
 // a producer of data of type T:
@@ -18,160 +18,139 @@ pub trait Distribution<T> {
 }
 ```
 
-Rand provides implementations of many different distributions; we cover the most
-common of these here, but for full details refer to the [`distributions`] module
-and the [`rand_distr`] crate.
+Rand 提供了许多分布的实现；这里会谈论最常见的一些分布。
+完整的细节请参考 [`distributions`] 模块和 [`rand_distr`] crate 。
 
-# Uniform distributions
+# 均匀分布
 
-The most obvious type of distribution is the one we already discussed: one
-without pattern, where each value or range of values is equally likely. This is
-known as *uniform*.
+最显眼的一种分布类型已经被讨论过了：
+它没有模式，每个值或者一列值都是等可能的。
+这被称为 **均匀分布** (uniform) 。
 
-Rand actually has several variants of this, repesenting different ranges:
+## 形式
 
--   [`Standard`] requires no parameters and samples values uniformly according
-    to the type. [`Rng::gen`] provides a short-cut to this distribution.
--   [`Uniform`] is parametrised by `Uniform::new(low, high)` (including `low`,
-    excluding `high`) or `Uniform::new_inclusive(low, high)` (including both),
-    and samples values uniformly within this range.
-    [`Rng::gen_range`] is a convenience method defined over
-    [`Uniform::sample_single`], optimised for single-sample usage.
--   [`Alphanumeric`] is uniform over the `char` values `0-9A-Za-z`.
--   [`Open01`] and [`OpenClosed01`] are provide alternate sampling ranges for
-    floating-point types (see below).
+Rand 实际上有几种不同形式的均匀分布，代表了不同的范围：
 
-## Uniform sampling by type
+-   [`Standard`] 不需要参数，它根据类型进行均匀抽样。
+    [`Rng::gen`] 提供了抽取这个分布的捷径。
+-   [`Uniform`] 具有两种参数化形式： `Uniform::new(low, high)` （左闭右开）；
+    `Uniform::new_inclusive(low, high)` （左右都是闭区间）。
+    它从区间范围内抽样。
 
-Lets go over the distributions by type:
+    [`Rng::gen_range`] 是定义在 [`Uniform::sample_single`] 之上的，它经过优化来生成单样本。
+-   [`Alphanumeric`] 在 `0-9A-Za-z` 范围内的 `char` 类型进行均匀抽样。
+-   [`Open01`] 和 [`OpenClosed01`] 提供对浮点类型均匀抽样的替代方式。（见下文）
 
--   For `bool`, [`Standard`] samples each value with probability 50%.
--   For `Option<T>`, the [`Standard`] distribution samples `None` with
-    probability 50%, otherwise `Some(value)` is sampled, according to its type.
--   For integers (`u8` through to `u128`, `usize`, and `i*` variants),
-    [`Standard`] samples from all possible values while
-    [`Uniform`] samples from the parameterised range.
--   For `NonZeroU8` and other "non-zero" types, [`Standard`] samples uniformly
-    from all non-zero values (rejection method).
--   `Wrapping<T>` integer types are sampled as for the corresponding integer
-    type by the [`Standard`] distribution.
--   For floats (`f32`, `f64`),
+## 根据类型均匀抽样
 
-    -   [`Standard`] samples from the half-open range `[0, 1)` with 24 or 53
-        bits of precision (for `f32` and `f64` respectively)
-    -   [`OpenClosed01`] samples from the half-open range `(0, 1]` with 24 or
-        53 bits of precision
-    -   [`Open01`] samples from the open range `(0, 1)` with 23 or 52 bits of
-        precision
-    -   [`Uniform`] samples from a given range with 23 or 52 bits of precision
--   For the `char` type, the [`Standard`] distribution samples from all
-    available Unicode code points, uniformly; many of these values may not be
-    printable (depending on font support). The [`Alphanumeric`] samples from
-    only a-z, A-Z and 0-9 uniformly.
--   For tuples and arrays, each element is sampled as above, where supported.
-    The [`Standard`] and [`Uniform`] distributions each support a selection of
-    these types (up to 12-tuples and 32-element arrays).
-    This includes the empty tuple `()` and array.
-    When using `rustc` ≥ 1.51, enable the `min_const_gen` feature to support
-    arrays larger than 32 elements.
--   For SIMD types, each element is sampled as above, for [`Standard`] and
-    [`Uniform`] (for the latter, `low` and `high` parameters are *also* SIMD
-    types, effectively sampling from multiple ranges simultaneously). SIMD
-    support is gated behind a [feature flag](../features.html#simd-support).
+接下来按照类型认真讨论均匀分布：
 
-# Non-uniform distributions
+-   对于 `bool`： [`Standard`] 对每个值以 50% 的概率抽样。
+-   对于 `Option<T>`： [`Standard`] 对 `None` 值以 50% 概率抽样，
+    对 `Some(value)` 则依照 `value` 的类型进行抽样。
+-   对于整数（从 `u8` 到 `u128`、`usize` 和 `i*` 之类），
+    [`Standard`] 从所有可能的值中抽样；
+    [`Uniform`] 从参数的范围内抽样。
+-   对于 `NonZeroU8` 和其他非零类型， [`Standard`] 从所有非零值中抽样（拒绝采样的方式）
+-   对于 `Wrapping<T>` 形式的整数类型，抽样方式与对应的整数类型一样，以 [`Standard`] 方式抽样。
+-   对于浮点数（如 `f32` 、 `f64`）：
 
-Non-uniform distributions can be divided into two categories, as follows.
-Some of these discrete and all of the continuous distributions have been moved
-from the main [`rand`] crate to a dedicated [`rand_distr`] crate.
+    -   [`Standard`] 从 `[0, 1)` 范围内，分别对 `f32` 或 `f64` 类型以 24 或 53 bits 的精度抽样。
+    -   [`OpenClosed01`] 从 `(0, 1]` 范围内以 24 或 53 bits 的精度抽样。
+    -   [`Open01`] 从 `(0, 1)` 范围内以 23 或 52 bits 的精度抽样。
+    -   [`Uniform`] 从给定范围内以 23 或 52 bits 的精度抽样。
 
-## Discrete non-uniform distributions
+-   对于 `char` 类型， [`Standard`] 从所有可用的 Unicode 码位 (code points) 中抽样；
+    大多值因为字体支持程度可能打印不出来。
+    [`Alphanumeric`] 只从 a-z, A-Z 和 0-9 中抽样。
+-   对于元组和数组，元素是以上的类型时，则按照相应规则抽样。
+    [`Standard`] 和 [`Uniform`] 都支持最多 12 个元素的元组和最多 32 个元素的数组，
+    而且支持空元组 `()` 和空数组 `[]` 。
 
-Discrete distributions sample from boolean or integer types. As above, these
-can be sampled uniformly, or, as below, via a non-uniform distribution.
+    如果使用的 `rustc` 大于等于 1.51 版本，开启 `min_const_gen` feature 能支持超过
+    32 个元素的数组。
 
-Potentially a discrete distribution could sample directly from a set of discrete
-values such as a slice or an `enum`. See the section on [Sequences] regarding
-Rand's traits for slice and iterator types. Rand does not provide direct
-sampling from `enum`s, with the exception of `Option` (see above).
+-   对于 SIMD 类型， [`Standard`] 和 [`Uniform`] 方式把每个元素按照上面的方式抽样。
+    使用 [`Uniform`] 时， `low` 和 `high` 参数是 SIMD 类型时可以在多个范围内同时抽样。
+    需要开启 [`simd_support`] feature 来支持 SIMD 功能。
 
-### Booleans
+[`simd_support`]:https://github.com/rust-random/rand#crate-features
 
-The [`Bernoulli`] distribution is a fancy name for generating a boolean
-with a given a probability `p` of being `true`, or defined via a
-`success : failure` ratio. Often this is described as a *trial* with
-probability `p` of *success* (`true`).
+# 非均匀分布
 
-The methods [`Rng::gen_bool`] and [`Rng::gen_ratio`] are short-cuts to this
-distribution.
+所有非均匀分布分成以下两类：连续型和离散型。
+部分离散分布、所有连续分布已从 [`rand`] crate 移入专门的 [`rand_distr`] crate 。
 
-### Integers
+> 译者注：这个分类是从 Rand 库的设计上阐述的，没有完全对照概率统计领域的分类。
 
-The [`Binomial`] distribution is related to the [`Bernoulli`] in that it
-models running `n` independent trials each with probability `p` of success,
-then counts the number of successes.
+## 离散型分布
 
-Note that for large `n` the [`Binomial`] distribution's implementation is
-much faster than sampling `n` trials individually.
+离散分布从 bool 或整数类型上抽样。
+他们既可以像上面那样进行均匀分布，又可以像下面谈到的进行非均匀分布。
 
-The [`Poisson`] distribution expresses the expected number of events
-occurring within a fixed interval, given that events occur with fixed rate λ.
-[`Poisson`] distribution sampling generates `Float` values because `Float`s
-are used in the sampling calculations, and we prefer to defer to the user on
-integer types and the potentially lossy and panicking associated conversions.
-For example, `u64` values can be attained with `rng.sample(Poisson) as u64`.
+一个离散分布也可能直接从一组离散的值中抽样，比如切片或枚举体。
+涉及切片和迭代器类型的抽样内容，请参考 [随机序列][Sequences] 一章。
+Rand 不直接提供从枚举体抽样，但提供了 `Option` 这个枚举体抽样
+（[见上文](./guide-dist.html#根据类型均匀抽样)）。
 
-Note that out of range float to int conversions with `as` result in undefined
-behavior for Rust <1.45 and a saturating conversion for Rust >=1.45.
+### 对 bool 抽样
 
-### Weighted sequences
+[`Bernoulli`] 分布已给定概率 `p` 从 bool 类型中产生随机值 `true` 。 
+它可以以 `success : failure` 比例定义 `true` 的概率。
+通常这个分布描述一次以成功概率 `p` 试验 (trial) 。
 
-The [`WeightedIndex`] distribution samples an index from sequence of weights.
-See the [Sequences] section for convenience wrappers directly sampling a slice
-element.
+[`Rng::gen_bool`] 和 [`Rng::gen_ratio`] 函数是调用这个分布的捷径。
 
-For example, weighted sampling could be used to model the colour of a marble
-sampled from a bucket containing 5 green, 15 red and 80 blue marbles.
+### 对整数抽样
 
-Currently the Rand lib only implements *sampling with replacement*, i.e.
-repeated sampling assumes the same distribution (that any sampled marble
-has been replaced). An alternative distribution implementing
-*sampling without replacement* has been
-[requested](https://github.com/rust-random/rand/issues/596).
+[`Binomial`] 分布与 [`Bernoulli`] 有关，它用对 `n` 个独立试验建立模型，
+其中每个试验以 `p` 概率成功，然后对成功次数计数。
 
-Note also that two implementations of [`WeightedIndex`] are available; the
-first is optimised for a small number of samples while
-[`alias_method::WeightedIndex`] is optimised for a large number of samples
-(where "large" may mean "> 1000"; benchmarks recommended).
+注意，如果 `n` 较大， [`Binomial`] 比单次重复抽取 `n` 次试验要快得多。
 
-## Continuous non-uniform distributions
+[`Poisson`] 分布描述了给定 λ 参数的情况下，在固定区间内事件预期发生的次数。
+由于概率计算中使用 `Float` ，所以 [`Poisson`] 的抽样结果是 `Float` 。
+使用者需要整数类型时，可以对结果进行可能损失精度或造成 panic 的转换。
+比如使用 `rng.sample(Poisson) as u64` 来获得 `u64` 类型的值。
 
-Continuous distributions model samples drawn from the real number line ℝ, or in
-some cases a point from a higher dimension (ℝ², ℝ³, etc.). We provide
-implementations for `f64` and for `f32` output in most cases, although currently
-the `f32` implementations simply reduce the precision of an `f64` sample.
+注意，使用 `as` 把浮点数转换整数时，若超出范围，
+则在 Rust < 1.45 的版本中导致未定义行为 (undefined behavior) ，
+在 Rust >= 1.45 的版本中导致饱和转换 (saturating conversion) 。
 
-The exponential distribution, [`Exp`], simulates time until decay, assuming a
-fixed rate of decay (i.e. exponential decay).
+### 加权序列
 
-The [`Normal`] distribution (also known as Gaussian) simulates sampling from
-the Normal distribution ("Bell curve") with the given mean and standard
-deviation. The [`LogNormal`] is related: for sample `X` from the log-normal
-distribution, `log(X)` is normally distributed; this "skews" the normal
-distribution to avoid negative values and to have a long positive tail.
+[`WeightedIndex`] 从一个权重序列中对索引抽样。
+若需要直接对切片元素抽样，参阅 [随机序列][Sequences] 一章。
 
-The [`UnitCircle`] and [`UnitSphereSurface`] distributions simulate uniform
-sampling from the edge of a circle or surface of a sphere.
+举例来说，加权抽样可用于建立以下模型：
+桶里有一些颜色的弹珠，绿色的 5 个、红色的 15 个、蓝色的 80 个，然后从桶里抽取一个弹珠。
 
-The [`Cauchy`] distribution (also known as the Lorentz distribution) is the
-distribution of the x-intercept of a ray from point `(x0, γ)` with uniformly
-distributed angle.
+Rand 库目前只实现 **有放回** 抽样，即从同一个分布中重复抽样。
+所以任何抽取过的弹珠都被放回桶里。
+另一种抽样方式是无放回抽样，参考 [issue 596](https://github.com/rust-random/rand/issues/596) 。
 
-The [`Beta`] distribution is a two-parameter probability distribution, whose
-output values lie between 0 and 1. The [`Dirichlet`] distribution is a
-generalisation to any positive number of parameters.
+也要注意，[`WeightedIndex`] 有两种实现：
+[`WeightedIndex`] 经过优化适用于少量样本抽样；
+而 [`alias_method::WeightedIndex`] 经过优化适用于大样本抽样。
+根据基准测试的结果，建议样本量超过 1000 时使用大样本抽样。
 
-[Sequences]: ../guide-seq.html
+## 连续型分布
+
+连续型分布从实数轴 ℝ 上抽样，或者有时从高维（ℝ²、 ℝ³ 等等）抽取一个点。
+Rand 针对大多数场景提供了 `f64` 和 `f32` 类型的实现。
+目前 `f32` 类型的实现结果只是比 `f64` 类型的少了些精度。
+
+* [`Exp`] 以固定衰减率 (exponential decay) 作为参数，模拟了衰退前的时间长度（寿命）——指数分布。
+* [`Normal`] 需给定均值和标准差，模拟正态分布（高斯分布）抽样。
+* [`LogNormal`] 对对数正态分布抽样，如果 `X` 服从对数正统分布，那么 `log(X)`
+  服从正态分布。这种对正态分布变形，目的是避免负值而且希望有正坐标轴长尾。
+* [`UnitCircle`] 和 [`UnitSphere`] 分布模拟从圆的边缘或者球面进行均匀抽样。
+* [`Cauchy`] 分布 （Lorentz 分布）描述的是：从 `(x0, γ)` 点以均匀分布的角度散发一条射线，
+  x 轴的截距则服从柯西分布。
+* [`Beta`] 是两参数的概率分布，其随机值位于 0-1 区间内。
+* [`Dirichlet`] 分布是对任意正参数的推广。
+
+[Sequences]: ./guide-seq.html
 [`Distribution`]: https://rust-random.github.io/rand/rand/distributions/trait.Distribution.html
 [`distributions`]: https://rust-random.github.io/rand/rand/distributions/index.html
 [`rand`]: https://rust-random.github.io/rand/rand/index.html
@@ -190,14 +169,15 @@ generalisation to any positive number of parameters.
 [`OpenClosed01`]: https://rust-random.github.io/rand/rand/distributions/struct.OpenClosed01.html
 [`Bernoulli`]: https://rust-random.github.io/rand/rand/distributions/struct.Bernoulli.html
 [`Binomial`]: https://rust-random.github.io/rand/rand/distributions/struct.Binomial.html
-[`Exp`]: https://rust-random.github.io/rand/rand/distributions/struct.Exp.html
-[`Normal`]: https://rust-random.github.io/rand/rand/distributions/struct.Normal.html
-[`LogNormal`]: https://rust-random.github.io/rand/rand/distributions/struct.LogNormal.html
-[`UnitCircle`]: https://rust-random.github.io/rand/rand/distributions/struct.UnitCircle.html
-[`UnitSphereSurface`]: https://rust-random.github.io/rand/rand/distributions/struct.UnitSphereSurface.html
-[`Cauchy`]: https://rust-random.github.io/rand/rand/distributions/struct.Cauchy.html
-[`Poisson`]: https://rust-random.github.io/rand/rand/distributions/struct.Poisson.html
-[`Beta`]: https://rust-random.github.io/rand/rand/distributions/struct.Beta.html
-[`Dirichlet`]: https://rust-random.github.io/rand/rand/distributions/struct.Dirichlet.html
-[`WeightedIndex`]: https://rust-random.github.io/rand/rand/distributions/weighted/struct.WeightedIndex.html
-[`alias_method::WeightedIndex`]: https://rust-random.github.io/rand/rand/distributions/weighted/alias_method/struct.WeightedIndex.html
+[`Exp`]: https://rust-random.github.io/rand/rand_distr/struct.Exp.html
+[`Normal`]: https://rust-random.github.io/rand/rand_distr/struct.Normal.html
+[`LogNormal`]: https://rust-random.github.io/rand/rand_distr/struct.LogNormal.html
+[`LogNormal`]: https://rust-random.github.io/rand/rand_distr/struct.LogNormal.html
+[`UnitCircle`]: https://rust-random.github.io/rand/rand_distr/struct.UnitCircle.html
+[`UnitSphere`]: https://rust-random.github.io/rand/rand_distr/struct.UnitSphere.html
+[`Cauchy`]: https://rust-random.github.io/rand/rand_distr/struct.Cauchy.html
+[`Poisson`]: https://rust-random.github.io/rand/rand_distr/struct.Poisson.html
+[`Beta`]: https://rust-random.github.io/rand/rand_distr/struct.Beta.html
+[`Dirichlet`]: https://rust-random.github.io/rand/rand_distr/struct.Dirichlet.html
+[`WeightedIndex`]: https://rust-random.github.io/rand/rand_distr/struct.WeightedIndex.html
+[`alias_method::WeightedIndex`]: https://rust-random.github.io/rand/rand_distr/weighted_alias/struct.WeightedAliasIndex.html

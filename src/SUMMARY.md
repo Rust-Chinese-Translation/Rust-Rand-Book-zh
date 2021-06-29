@@ -13,9 +13,9 @@
     - [生成器的分类](guide-gen.md)
     - [支持的 RNGs](guide-rngs.md)
     - [随机数种子](guide-seeding.md)
-    - [生成随机值](guide-values.md)
+    - [随机值](guide-values.md)
     - [概率分布](guide-dist.md)
-    - [生成随机序列](guide-seq.md)
+    - [随机序列](guide-seq.md)
     - [处理 Error](guide-err.md)
 
 - [移植性](portability.md)
