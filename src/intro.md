@@ -15,9 +15,9 @@
 除了这本书，你可能还想查看以下链接：
 
 -   [Rand 库最新发行版的 API 文档](https://docs.rs/rand/) 
-    （ doc.rs 地址 仅有 `rand` 库的文档，如果查相关库文档，需要访问单独的文档页面）
+    （ doc.rs 地址，仅有 `rand` 库的文档。）
 -   [repo master 分支的 API 文档](https://rust-random.github.io/rand/) 
-    （repo 的文档地址具有 `rand` 所涉及的所有相关库的文档，一起查找更方便）
+    （repo 的文档地址，具有 `rand` 所涉及的大部分相关库的文档，跨 crate 查找更方便）
 -   [Rand 库 repo](https://github.com/rust-random/rand/)
 -   [原书 repo](https://github.com/rust-random/book/)
 - 英文：
