@@ -7,7 +7,8 @@ The Rust Rand Book：
 - 英文：
 [repo](https://github.com/rust-random/book/) |
 [渲染版](https://rust-random.github.io/book/) 
-- 中文：[repo](https://github.com/zjp-CN/Rust-Rand-Book-zh) |
+- 中文：
+[repo](https://github.com/zjp-CN/Rust-Rand-Book-zh) |
 [渲染版](https://zjp-cn.github.io/Rust-Rand-Book-zh) |
 [国内阅读站点](http://129.28.186.100/Rust-Rand-Book-zh)
 
