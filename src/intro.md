@@ -19,7 +19,6 @@
 -   [repo master 分支的 API 文档](https://rust-random.github.io/rand/) 
     （repo 的文档地址，具有 `rand` 所涉及的大部分相关库的文档，跨 crate 查找更方便）
 -   [Rand 库 repo](https://github.com/rust-random/rand/)
--   [原书 repo](https://github.com/rust-random/book/)
 - 英文：
 [repo](https://github.com/rust-random/book/) |
 [渲染版](https://rust-random.github.io/book/) 
